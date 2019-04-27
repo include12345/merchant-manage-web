@@ -2,7 +2,7 @@
     <el-menu class="navbar" mode="horizontal">
         <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
         <breadcrumb></breadcrumb>
-        <el-dropdown class="avatar-container" trigger="click">
+        <!-- <el-dropdown class="avatar-container" trigger="click">
             <div class="avatar-wrapper">
                 <img class="user-avatar" :src="avatar">
                 <i class="el-icon-caret-bottom"></i>
@@ -16,6 +16,16 @@
                 <el-dropdown-item divided>
                     <span @click="logout" style="display:block;">退出</span>
                 </el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown> -->
+
+        <el-dropdown class="avatar-container" style="right: 25px;">
+            <span class="el-dropdown-link">更多<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <el-dropdown-menu class="user-dropdown" slot="dropdown">
+                <router-link class='inlineBlock' to="/">
+                    <el-dropdown-item>主页</el-dropdown-item>
+                </router-link>
+                <el-dropdown-item divided><span @click="logout" style="display:block;">退出</span></el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
     </el-menu>
