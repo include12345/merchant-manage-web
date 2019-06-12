@@ -35,7 +35,7 @@ const user = {
                     commit('SET_TOKEN', response.token)
                     commit('SET_USERNAME',response.username)
                     commit('SET_NAME',response.name)
-                    resolve()
+                    resolve(response)
                 }).catch(error => {
                     reject(error)
                 })
