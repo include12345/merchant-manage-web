@@ -17,11 +17,14 @@ export function login(username, password) {
   })
 }
 
-export function getInfo(token) {
+export function checkToken() {
   return request({
-    url: '/user/getMenus',
+    url: '/user/api/check',
     method: 'get',
-    params: {token}
+    headers:{
+      "token":getToken()
+    }
+    // params: {token}
   })
 }
 
@@ -39,16 +42,18 @@ export function logout(token) {
 }
 
 
-export function getArticleList(form) {
+export function listMerchantCustomerPaging(form) {
   return request({
-    url: '/blog/listBlog',
-    method: 'post',
-    data: {
+    url: '/api/merchant/listMerchantCustomerPaging',
+    method: 'get',
+    params: {
+      "name":form.name,
+      "cellphone": form.cellphone,
       "page":form.page,
       "pageSize":form.pageSize
     },
     headers:{
-      "token":getToken()+'-'+'getArticleList'
+      "token":getToken()
     }
   })
 }

@@ -13,7 +13,9 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      next()
+        store.dispatch('CheckToken').then(res => { //校验token是否有效
+          next()
+        }) 
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
