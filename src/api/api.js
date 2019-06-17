@@ -42,21 +42,35 @@ export function logout(token) {
 }
 
 
-export function listMerchantCustomerPaging(form) {
+export function listMerchantConsumerPaging(form) {
   return request({
-    url: '/api/merchant/listMerchantCustomerPaging',
+    url: '/api/merchant/listMerchantConsumerPaging',
     method: 'get',
     params: {
       "name":form.name,
       "cellphone": form.cellphone,
-      "page":form.page,
+      "pageNo":form.pageNo-1,
       "pageSize":form.pageSize
     },
     headers:{
-      "token":getToken()
+      "token": getToken()
     }
   })
 }
+
+
+export function deleteMerchantConsumer(id) {
+  return request({
+    url: '/api/merchant/deleteMerchantConsumer/'+id,
+    method: 'delete',
+    params: {},
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
+
 
 
 export function removeOneArticle(id) {
