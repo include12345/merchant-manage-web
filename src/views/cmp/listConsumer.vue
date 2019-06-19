@@ -14,7 +14,10 @@
                 <el-table-column prop="mtime" label="最后变更时间" width="200"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200"> 
                     <template slot-scope="scope">
-                        <el-button @click="dialogVisible = true;id=tableData[scope.$index].id" type="text">
+                        <!-- <el-button @click="dialogVisible = true;id=tableData[scope.$index].id" type="text">
+                            管理
+                        </el-button> -->
+                        <el-button @click.native.prevent="consumerHandle(tableData[scope.$index])" type="text">
                             管理
                         </el-button>
                         <el-button @click.native.prevent="deleteRow(scope.$index, tableData, tableData[scope.$index].id, tableData[scope.$index].consumerName)" type="text">
@@ -33,22 +36,26 @@
             :total="sizeCount">
             </el-pagination>
         </div>
-         <el-dialog title="编辑功能" :visible.sync="dialogVisible" width="90%" top="20px">
-        <consumer v-bind:consumer-id="id" v-if="dialogVisible"></consumer>
-      </el-dialog>
+         <!-- <el-dialog title="编辑功能" :visible.sync="dialogVisible" width="90%" top="20px"> -->
+        <!-- <consumer v-bind:consumer-id="id" v-if="dialogVisible"></consumer> -->
+      <!-- </el-dialog> -->
     </div>
 </template>
 
 <script>
   import {listMerchantConsumerPaging, deleteMerchantConsumer} from '@/api/api'
-  import { Consumer } from '@/views/cmp/consumer'
+  import {mapGetters} from 'vuex'
   export default {
-    name: 'listMerchantConsumerPaging',
-    components: {
-    Consumer
-    },
+    name: 'listConsumer',
+    computed: {
+  // 使用对象展开运算符将 getter 混入 computed 对象中
+    ...mapGetters([
+      'consumer'
+    ])
+  },
     data() {
       return {
+        id: this.id,
         name: this.consumerName,
         cellphone: this.cellphone,
         tableData:[],
@@ -58,7 +65,6 @@
         sizeCount:this.sizeCount,
         listMerchantConsumerPaging: function(json) {
           listMerchantConsumerPaging(json).then(response => {
-            console.log(response);
             if (!response.content) {
               this.$message({
                 message: '结果为空',
@@ -71,7 +77,6 @@
             document.getElementById('hide').style.display = "block";
             this.tableData = response.content;
           }).catch(error => {
-            console.log(error)
             this.$message({
               message: '异常：' + error,
               type: 'warning',
@@ -113,6 +118,10 @@
         json.pageSize = this.pageSize;
         this.listMerchantConsumerPaging(json)
       }, 
+      consumerHandle(row) {
+        this.$store.dispatch('setConsumer', row)
+         this.$router.push({path:'/cmp/consumer'})
+      },
       deleteRow(index, rows, id, name) {
         this.$confirm('此操作将永久删除该会员:' + name + ', 是否继续?', '提示', {
           confirmButtonText: '确定',

@@ -7,6 +7,7 @@ import Layout from '../views/layout/Layout'
 
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: true},
+  // {path: '/cmp/consumer', component: () => import('@/views/cmp/consumer'), hidden: true},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {
     path: '',
@@ -26,15 +27,16 @@ export const constantRouterMap = [
     name: 'cmp',
     meta: {title: '会员管理', icon: 'example'},
     children: [{
-      path: 'cmp',
-      name: 'cmp',
+      path: 'listConsumer',
+      name: 'listConsumer',
       component: () => import('@/views/cmp/listConsumer'),
-      meta: {title: '会员列表', icon: 'product-list'}
+      meta: {title: '会员列表', icon: 'product-list'},
     },{
-      path: 'cmp',
-      name: 'cmp',
-      component: () => import('@/views/cmp/listConsumer'),
-      meta: {title: '会员列表', icon: 'product-list'}
+      path: 'consumer',
+      name: 'consumer',
+      component: () => import('@/views/cmp/consumer'),
+      meta: {title: '会员', icon: 'product-list'},
+      hidden: true
     }]
   },
   {

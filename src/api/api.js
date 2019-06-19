@@ -70,27 +70,29 @@ export function deleteMerchantConsumer(id) {
   })
 }
 
+getMerchantConsumerWallet, editMerchantConsumerWallet
 
 
-
-export function removeOneArticle(id) {
+export function getMerchantConsumerWallet(id) {
   return request({
-    url: '/api/blog/deleteBlog',
+    url: '/api/merchant/getMerchantConsumerWallet',
     method: 'get',
-    params: {id},
+    params: {
+      "consumerId":id
+    },
     headers:{
-      "token":getToken()+'-'+'deleteBlog'
+      "token":getToken()
     }
   })
 }
 
-export function getOneArticle(id) {
+export function editMerchantConsumerWallet(json) {
   return request({
-    url: '/blog/getBlog',
-    method: 'get',
-    params: {id},
+    url: '/api/merchant/editMerchantConsumerWallet',
+    method: 'post',
+    data: json,
     headers:{
-      "token":getToken()+'-'+'getOneArticle'
+      "token":getToken()
     }
   })
 }
