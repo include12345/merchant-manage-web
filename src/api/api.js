@@ -70,8 +70,21 @@ export function deleteMerchantConsumer(id) {
   })
 }
 
-getMerchantConsumerWallet, editMerchantConsumerWallet
-
+export function addMerchantConsumer(form) {
+  return request({
+    url: '/api/merchant/addMerchantConsumer',
+    method: 'post',
+    params: {
+      "name":form.name,
+      "cellphone": form.cellphone,
+      "email":form.email,
+      "wechat":form.wechat
+    },
+    headers:{
+      "token": getToken()
+    }
+  })
+}
 
 export function getMerchantConsumerWallet(id) {
   return request({
@@ -93,27 +106,6 @@ export function editMerchantConsumerWallet(json) {
     data: json,
     headers:{
       "token":getToken()
-    }
-  })
-}
-export function createArticle(param) {
-  return request({
-    url: '/api/blog/createBlog',
-    method: 'post',
-    data: param,
-    headers:{
-      "token":getToken()+'-'+'createBlog'
-    }
-  })
-}
-
-export function editArticle(param) {
-  return request({
-    url: '/api/blog/updateBlog',
-    method: 'post',
-    data: param,
-    headers:{
-      "token":getToken()+'-'+'updateBlog'
     }
   })
 }
