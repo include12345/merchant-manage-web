@@ -74,7 +74,7 @@ export function addMerchantConsumer(form) {
   return request({
     url: '/api/merchant/addMerchantConsumer',
     method: 'post',
-    params: {
+    data: {
       "name":form.name,
       "cellphone": form.cellphone,
       "email":form.email,
@@ -86,9 +86,9 @@ export function addMerchantConsumer(form) {
   })
 }
 
-export function getMerchantConsumerWallet(id) {
+export function getMerchantConsumer(id) {
   return request({
-    url: '/api/merchant/getMerchantConsumerWallet',
+    url: '/api/merchant/getMerchantConsumer',
     method: 'get',
     params: {
       "consumerId":id

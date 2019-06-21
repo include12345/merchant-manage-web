@@ -1,14 +1,14 @@
 <template>
     <div class="app-container">
         <div>
-            <el-input v-model="name" name="consumerName" placeholder="请输入会员名称" style="width:20%"></el-input>
-            <el-input v-model="cellphone" name="cellphone" placeholder="请输入会员手机号" style="margin-left: 40px;width:20%"></el-input>
+            <el-input v-model="consumerName" name="consumerName" placeholder="请输入会员名称" style="width:20%"></el-input>
+            <el-input v-model="consumerCellphone" name="consumerCellphone" placeholder="请输入会员手机号" style="margin-left: 40px;width:20%"></el-input>
             <el-button type="primary" @click.native.prevent="handle" style="margin-left: 40px">查询</el-button>
             <el-button type="text" @click="dialogVisible = true" style="float:right;margin-right:20px">新增</el-button>
         </div>
         <hr>
         <div id="hide" style="padding-top:30px;display: none;padding-right:30px;padding-bottom:30px">
-            <el-table :data="tableData" style="width:100%" max-height="750" border highlight-current-row>
+            <el-table :data="tableData" style="width:100%" stripe>
                 <el-table-column prop="consumerName" label="会员名称" width="200"></el-table-column>
                 <el-table-column prop="consumerCellphone" label="会员手机号" width="200"></el-table-column>
                 <el-table-column prop="consumerEmail" label="会员邮箱" width="200"></el-table-column>
@@ -17,7 +17,7 @@
                 <el-table-column prop="mtime" label="最后变更时间" width="200"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200"> 
                     <template slot-scope="scope">
-                        <el-button @click.native.prevent="consumerHandle(tableData[scope.$index])" type="text">
+                        <el-button @click.native.prevent="consumerHandle(tableData[scope.$index].id)" type="text">
                             管理
                         </el-button>
                         <el-button @click.native.prevent="deleteRow(scope.$index, tableData, tableData[scope.$index].id, tableData[scope.$index].consumerName)" type="text">
@@ -36,23 +36,23 @@
             :total="sizeCount">
             </el-pagination>
             <el-dialog title="添加会员" :visible.sync="dialogVisible" v-if="dialogVisible">
-                <el-form label-width= "100px" :model="consumer" :rules="consumerRules">
+                <el-form label-width= "100px" :model="consumer" :rules="consumerRules" ref="consumer">
                     <el-form-item prop="name" label="会员名称:">
-                        <el-input v-model="consumer.name" name="name" placeholder="请输入会员名称"></el-input>
+                        <el-input v-model="consumer.name" placeholder="请输入会员名称"></el-input>
                     </el-form-item>
                     <el-form-item prop="cellphone" label="会员手机号:">
-                        <el-input v-model="consumer.cellphone" name="cellphone" placeholder="请输入会员手机号"></el-input>
+                        <el-input v-model="consumer.cellphone" placeholder="请输入会员手机号"></el-input>
                     </el-form-item>
                     <el-form-item prop="email" label="会员邮箱:">
-                        <el-input v-model="consumer.email" name="email" placeholder="请输入会员邮箱"></el-input>
+                        <el-input v-model="consumer.email" name="email" autocomplete="off" placeholder="请输入会员邮箱"></el-input>
                     </el-form-item>
                     <el-form-item prop="wechat" label="会员微信号:">
-                        <el-input v-model="consumer.wechat" name="wechat" placeholder="请输入会员微信号"></el-input>
+                        <el-input v-model="consumer.wechat" name="wechat" autocomplete="off" placeholder="请输入会员微信号"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click.native.prevent="addConsumerHandle">确定</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+                    <el-button type="primary" @click.native.prevent="addConsumerHandle('consumer')">确定</el-button>
+                    <el-button type="primary" @click="resetForm('consumer')">关闭</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -72,33 +72,33 @@
   },
     data() {
       return {
+          consumerName: null,
+          consumerCellphone: null,
+          consumer: {
+            name: '',
+            cellphone: '',
+            email: null,
+            wechat: null
+        },
         consumerRules: {
-        name: [{
-            required: true,
+        name: [{ required: true, message: '会员名称不能为空', trigger: 'blur'},{
             pattern: /^.{1,128}$/,
-            message: '长度范围需在1-128之间' 
+            message: '长度范围需在1-128之间',
+            trigger: 'blur'
         }],
-        cellphone: [{
-            required: true,
+        cellphone: [ { required: true, message: '会员手机号不能为空', trigger: 'blur'},{
             pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
-            message: '手机号格式不对' 
+            message: '手机号格式不对',
+            trigger: 'blur'
         }],
-        email: [{
-            pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-            message: '邮箱格式不对' 
-        }],
+        email: [ { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
         wechat: [{
             pattern: /^.{1,128}$/,
             message: '长度范围需在1-128之间' 
         }]},
         dialogVisible: false,
         id: this.id,
-        consumer: {
-            name: this.name,
-            cellphone: this.cellphone,
-            email: this.email,
-            wechat: this.wechat
-        },
+        
         tableData:[],
         pageParam: 1,
         pageSize: 10,
@@ -129,9 +129,19 @@
       }
     },
     methods: {
-      addConsumerHandle() {
+      addConsumerHandle(formName) {
         return new Promise((resolve, reject) => {
           addMerchantConsumer(this.consumer).then(response => {
+              if(!response.id) {
+                  this.$message({
+                    message: '添加失败：' + response,
+                    type: 'error',
+                    duration: 1000
+                })
+                return;
+              }
+            this.$refs[formName].resetFields();
+            this.dialogVisible = false
             var json = {};
             if(this.consumerName) {
                 json.name = this.consumerName;
@@ -152,6 +162,10 @@
             reject(error)
           })
         })
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dialogVisible = false
       },
       handle() {
         var json = {};
@@ -182,9 +196,9 @@
         json.pageSize = this.pageSize;
         this.listMerchantConsumerPaging(json)
       }, 
-      consumerHandle(row) {
-        this.$store.dispatch('setConsumer', row)
-         this.$router.push({path:'/cmp/consumer'})
+      consumerHandle(id) {
+        // this.$store.dispatch('setConsumer', row)
+         this.$router.push({path:'/cmp/consumer', query: {id: id}})
       },
       deleteRow(index, rows, id, name) {
         this.$confirm('此操作将永久删除该会员:' + name + ', 是否继续?', '提示', {
@@ -227,10 +241,7 @@
    .el-message-box {
      width: 800px
    }
-.center_type {
-  /* display: block; */
-  text-align: center;
-}
+
 .el-dialog__body {
     padding: 30px 200px;
     color: #606266;

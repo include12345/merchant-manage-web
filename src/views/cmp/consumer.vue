@@ -5,14 +5,14 @@
         <el-col :span="23">
           <div class="grid-content bg-purple-light">
             <p class="center_type" style="color:red">
-              会员 {{ consumer.consumerName }} 基本信息
+              会员 {{ consumerMap.consumerName }} 基本信息
             </p>
           </div>
         </el-col>
         <el-col :span="1">
           <div class="grid-content bg-purple">
             <el-button
-              @click.native.prevent="updateConsumerHandle(consumer)"
+              @click.native.prevent="updateConsumerHandle(consumerMap)"
               style="text-align:right"
               type="text">编辑</el-button>
           </div>
@@ -22,34 +22,34 @@
       <el-row>
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            <p class="center_type">名称 : {{ consumer.consumerName }}</p>
+            <p class="center_type">名称 : {{ consumerMap.consumerName }}</p>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple-light">
-            <p class="center_type">手机号 : {{ consumer.consumerCellphone }}</p>
+            <p class="center_type">手机号 : {{ consumerMap.consumerCellphone }}</p>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            <p class="center_type">邮箱 : {{ consumer.consumerEmail }}</p>
+            <p class="center_type">邮箱 : {{ consumerMap.consumerEmail }}</p>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
-            <p class="center_type">微信号 : {{ consumer.consumerWechat }}</p>
+            <p class="center_type">微信号 : {{ consumerMap.consumerWechat }}</p>
           </div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <div class="grid-content bg-purple-light">
-            <p class="center_type">会员创建时间 : {{ consumer.ctime }}</p>
+            <p class="center_type">会员创建时间 : {{ consumerMap.ctime }}</p>
           </div>
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple">
-            <p class="center_type">会员最后修改时间 : {{ consumer.mtime }}</p>
+            <p class="center_type">会员最后修改时间 : {{ consumerMap.mtime }}</p>
           </div>
         </el-col>
       </el-row>
@@ -60,14 +60,14 @@
         <el-col :span="23">
           <div class="grid-content bg-purple-light">
             <p class="center_type" style="color:red">
-              会员余额： {{ balance }} 分
+              会员余额： {{ consumerMap.balance }} 分
             </p>
           </div>
         </el-col>
         <el-col :span="1">
           <div class="grid-content bg-purple">
             <el-button
-              @click.native.prevent="updateConsumerWalletHandle(walletId, balance)"
+              @click.native.prevent="updateConsumerWalletHandle(consumerMap.walletId, consumerMap.balance)"
               style="text-align:right"
               type="text">充值</el-button>
           </div>
@@ -98,7 +98,7 @@
 
 <script>
 import {
-  getMerchantConsumerWallet,
+  getMerchantConsumer,
   editMerchantConsumerWallet
 } from "@/api/api";
 import { mapGetters } from "vuex";
@@ -106,9 +106,9 @@ export default {
   name: "consumer",
   data() {
     return {
-      row: this.consumer,
-      balance: null,
-      walletId : null,
+      consumerMap: {},
+    //   balance: null,
+    //   walletId : null,
       walletTransaction:[],
       pageParam: 1,
       pageSize: 10,
@@ -137,7 +137,7 @@ export default {
         })
       },
       getMerchantConsumer: function(consumerId) {
-        getMerchantConsumerWallet(consumerId).then(response => {
+        getMerchantConsumer(consumerId).then(response => {
           if (!response) {
             this.$message({
               message: "结果为空",
@@ -146,13 +146,12 @@ export default {
             });
             return;
           }
-          this.balance = response.balance;
-          this.walletId = response.id
+          this.consumerMap = response;
         });
       }
     };
   },
-  computed: mapGetters(["consumer"]),
+//   computed: mapGetters(["consumer"]),
   methods: {
     handle() {
       var json = {};
@@ -162,21 +161,21 @@ export default {
     //   if (this.cellphone) {
     //     json.cellphone = this.cellphone;
     //   }
-      json.consumerId = this.consumer.id;
+      json.consumerId = this.$route.query.id;
       json.pageNo = this.pageParam;
       json.pageSize = this.pageSize;
       this.listConsumerWalletTransactionPaging(json);
     },
     handleSizeChange(val) {
         var json = {};
-        json.consumerId = this.consumer.id;
+        json.consumerId = this.$route.query.id;
         json.pageNo = this.pageParam;
         json.pageSize = val;
         this.listConsumerWalletTransactionPaging(json)
       },
       handleCurrentChange(val) {
         var json = {};
-        json.consumerId = this.consumer.id;
+        json.consumerId = this.$route.query.id;
         json.pageNo = val;
         json.pageSize = this.pageSize;
         this.listConsumerWalletTransactionPaging(json)
@@ -186,14 +185,15 @@ export default {
     }
   },
   created() {
-    if (!this.consumer.id) {
+
+    if (!this.$route.query.id) {
       this.$router.push({ path: "/cmp/listconsumer" });
       return;
     }
-    this.getMerchantConsumer(this.consumer.id);
+    this.getMerchantConsumer(this.$route.query.id);
     this.$nextTick(function() {
         var json = {};
-        json.consumerId = this.consumer.id;
+        json.consumerId = this.$route.query.id;
         json.pageNo = this.pageParam;
         json.pageSize = this.pageSize;
         this.listConsumerWalletTransactionPaging(json)
