@@ -86,6 +86,25 @@ export function addMerchantConsumer(form) {
   })
 }
 
+export function updateMerchantConsumer(form) {
+  return request({
+    url: '/api/merchant/updateMerchantConsumer',
+    method: 'post',
+    data: {
+      "id":form.id,
+      "name":form.consumerName,
+      "cellphone": form.consumerCellphone,
+      "email":form.consumerEmail,
+      "wechat":form.consumerWechat
+    },
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
+
+
 export function getMerchantConsumer(id) {
   return request({
     url: '/api/merchant/getMerchantConsumer',
@@ -101,9 +120,14 @@ export function getMerchantConsumer(id) {
 
 export function editMerchantConsumerWallet(json) {
   return request({
-    url: '/api/merchant/editMerchantConsumerWallet',
+    url: '/api/merchant/rechargeMerchantConsumerBalance',
     method: 'post',
-    data: json,
+    data: {
+      "consumerId": json.consumerId,
+      "walletId": json.walletId,
+      "amount": json.amount,
+      "remark": json.remark
+    },
     headers:{
       "token":getToken()
     }
