@@ -134,12 +134,18 @@ export function editMerchantConsumerWallet(json) {
   })
 }
 
-export function getClassify() {
+
+
+export function listConsumerWalletTransactionPaging(form) {
   return request({
-    url: '/blog/getClassify',
+    url: '/api/merchant/listConsumerWalletTransactionPaging/'+ form.consumerId,
     method: 'get',
+    params: {
+      "pageNo":form.pageNo-1,
+      "pageSize":form.pageSize
+    },
     headers:{
-      "token":getToken()+'-'+'getClassify'
+      "token": getToken()
     }
   })
 }

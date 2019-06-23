@@ -84,51 +84,59 @@
         </el-col>
       </el-row>
       <hr />
-      <p class="center_type">会员充值记录</p>
-      <el-table
-        :data="walletTransaction"
-        style="width:100%"
-        max-height="750"
-        border
-        highlight-current-row
+      <div
+        id="hide"
+        style="padding-top:30px;display: none;padding-right:30px;padding-bottom:30px"
       >
-        <el-table-column
-          prop="beforeBalance"
-          label="充值前金额"
-        ></el-table-column>
-        <el-table-column prop="addAmount" label="充值金额"></el-table-column>
-        <el-table-column
-          prop="afterBalance"
-          label="变更后余额"
-        ></el-table-column>
-        <el-table-column
-          prop="userName"
-          label="操作人"
-          width="200"
-        ></el-table-column>
-        <el-table-column
-          prop="ctime"
-          :formatter="dateFormat"
-          label="开始时间"
-          width="200"
-        ></el-table-column>
-        <el-table-column
-          prop="mtime"
-          :formatter="dateFormat"
-          label="最后变更时间"
-          width="200"
-        ></el-table-column>
-      </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="page"
-        :page-sizes="[10, 50, 100, 500]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="sizeCount"
-      >
-      </el-pagination>
+        <p class="center_type">会员充值记录</p>
+        <el-table
+          :data="walletTransaction"
+          style="width:100%"
+          stripe
+        >
+          <el-table-column
+            prop="beforeBalance"
+            label="充值前金额(分)"
+          ></el-table-column>
+          <el-table-column prop="addAmount" label="充值金额(分)"></el-table-column>
+          <el-table-column
+            prop="afterBalance"
+            label="变更后余额(分)"
+          ></el-table-column>
+          <el-table-column
+            prop="operatorCreate"
+            label="操作人"
+            width="200"
+          ></el-table-column>
+           <el-table-column
+            prop="remark"
+            label="备注"
+            width="200"
+          ></el-table-column>
+          <el-table-column
+            prop="ctime"
+            :formatter="dateFormat"
+            label="开始时间"
+            width="200"
+          ></el-table-column>
+          <el-table-column
+            prop="mtime"
+            :formatter="dateFormat"
+            label="最后变更时间"
+            width="200"
+          ></el-table-column>
+        </el-table>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[10, 50, 100, 500]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="sizeCount"
+        >
+        </el-pagination>
+      </div>
     </div>
     <el-dialog
       title="修改会员"
@@ -173,25 +181,14 @@
       <p class="center_type" style="color:red">
         会员余额： {{ consumerMap.balance }} 分
       </p>
-      <el-form label-width="200px" :model="consumerWallet" ref="consumerWallet">
-        <el-form-item
-          :rules="[
-            { required: true, message: '金额不能为空' },
-            { type: number, message: '金额必须为数字值' }
-          ]"
-          prop="amount"
-          label="充值金额:"
-        >
+      <el-form label-width="200px" :model="consumerWallet" :rules="walletRules" ref="consumerWallet">
+        <el-form-item prop="amount" label="充值金额:">
           <el-input
             v-model="consumerWallet.amount"
             style="width:60%"
           ></el-input>
         </el-form-item>
-        <el-form-item
-          prop="remark"
-          :rules="[{ required: true, message: '备注不能为空' }]"
-          label="备注:"
-        >
+        <el-form-item prop="remark" label="备注:">
           <el-input
             type="textarea"
             maxlength="128"
@@ -219,13 +216,21 @@
 import {
   getMerchantConsumer,
   editMerchantConsumerWallet,
-  updateMerchantConsumer
+  updateMerchantConsumer,
+  listConsumerWalletTransactionPaging
 } from "@/api/api";
 import { dateFormat, dateFormatNoTable } from "@/utils/timeFormat";
 import { mapGetters } from "vuex";
 export default {
   name: "consumer",
   data() {
+      let checkInt = (rule, value, callback) => {
+        if ((Number(value))&&(value)%1 === 0) {
+          callback();
+        }else {
+          return callback(new Error('请输入整数！'));
+        }
+      };
     return {
       consumerRules: {
         name: [
@@ -252,6 +257,18 @@ export default {
           }
         ],
         wechat: [
+          {
+            pattern: /^.{1,128}$/,
+            message: "长度范围需在1-128之间"
+          }
+        ]
+      },
+      walletRules: {
+        amount: [
+          { validator: checkInt, trigger: 'blur' }
+        ],
+        remark: [
+          { required: true, message: "备注不能为空", trigger: "blur" },
           {
             pattern: /^.{1,128}$/,
             message: "长度范围需在1-128之间"
@@ -306,7 +323,7 @@ export default {
               });
           });
         } else {
-            return;
+          return;
         }
       });
     },
@@ -323,7 +340,8 @@ export default {
           json.remark = this.consumerWallet.remark;
           json.amount = this.consumerWallet.amount;
           return new Promise((resolve, reject) => {
-            editMerchantConsumerWallet(json).then(response => {
+            editMerchantConsumerWallet(json)
+              .then(response => {
                 if (!response.id) {
                   this.$message({
                     message: "添加失败：" + response,
@@ -335,6 +353,11 @@ export default {
                 this.$refs[form].resetFields();
                 this.dialogVisibleWallet = false;
                 this.consumerMap.balance = response.balance;
+                var json = {};
+                json.consumerId = this.$route.query.id;
+                json.pageNo = this.pageParam;
+                json.pageSize = this.pageSize;
+                this.listConsumerWalletTransactionPaging(json);
               })
               .catch(error => {
                 this.$message({
@@ -346,7 +369,7 @@ export default {
               });
           });
         } else {
-            return;
+          return;
         }
       });
     },
@@ -357,6 +380,7 @@ export default {
     listConsumerWalletTransactionPaging: function(json) {
       listConsumerWalletTransactionPaging(json)
         .then(response => {
+          console.log(response.content);
           if (!response.content) {
             this.$message({
               message: "结果为空",
@@ -424,9 +448,6 @@ export default {
       json.pageNo = val;
       json.pageSize = this.pageSize;
       this.listConsumerWalletTransactionPaging(json);
-    },
-    consumerHandle(row) {
-      this.$router.push({ path: "/cmp/consumer", query: row });
     }
   },
   created() {

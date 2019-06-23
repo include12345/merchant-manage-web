@@ -39,24 +39,24 @@ export const constantRouterMap = [
       hidden: true
     }]
   },
-  {
-    path: '/omp',
-    component: Layout,
-    redirect: '/omp/omp',
-    name: 'omp',
-    meta: {title: '订单管理', icon: 'example'},
-    children: [{
-      path: 'omp',
-      name: 'omp',
-      component: () => import('@/views/omp/index'),
-      meta: {title: '订单列表', icon: 'product-list'}
-    },{
-      path: 'omp',
-      name: 'omp',
-      component: () => import('@/views/omp/index'),
-      meta: {title: '订单列表', icon: 'product-list'}
-    }]
-  },
+  // {
+  //   path: '/omp',
+  //   component: Layout,
+  //   redirect: '/omp/omp',
+  //   name: 'omp',
+  //   meta: {title: '订单管理', icon: 'example'},
+  //   children: [{
+  //     path: 'omp',
+  //     name: 'omp',
+  //     component: () => import('@/views/omp/index'),
+  //     meta: {title: '订单列表', icon: 'product-list'}
+  //   },{
+  //     path: 'omp',
+  //     name: 'omp',
+  //     component: () => import('@/views/omp/index'),
+  //     meta: {title: '订单列表', icon: 'product-list'}
+  //   }]
+  // },
   {path: '*', redirect: '/404', hidden: true}
 
 ]
