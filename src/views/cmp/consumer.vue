@@ -149,16 +149,16 @@
         :rules="consumerRules"
         ref="consumerMap"
       >
-        <el-form-item prop="name" label="会员名称:">
+        <el-form-item prop="consumerName" label="会员名称:">
           <el-input v-model="consumerMap.consumerName"></el-input>
         </el-form-item>
-        <el-form-item prop="cellphone" label="会员手机号:">
+        <el-form-item prop="consumerCellphone" label="会员手机号:">
           <el-input v-model="consumerMap.consumerCellphone"></el-input>
         </el-form-item>
-        <el-form-item prop="email" label="会员邮箱:">
+        <el-form-item prop="consumerEmail" label="会员邮箱:">
           <el-input v-model="consumerMap.consumerEmail"></el-input>
         </el-form-item>
-        <el-form-item prop="wechat" label="会员微信号:">
+        <el-form-item prop="consumerWechat" label="会员微信号:">
           <el-input v-model="consumerMap.consumerWechat"></el-input>
         </el-form-item>
       </el-form>
@@ -227,13 +227,13 @@ export default {
       let checkInt = (rule, value, callback) => {
         if ((Number(value))&&(value)%1 === 0) {
           callback();
-        }else {
+        } else {
           return callback(new Error('请输入整数！'));
         }
       };
     return {
       consumerRules: {
-        name: [
+        consumerName: [
           { required: true, message: "会员名称不能为空", trigger: "blur" },
           {
             pattern: /^.{1,128}$/,
@@ -241,7 +241,7 @@ export default {
             trigger: "blur"
           }
         ],
-        cellphone: [
+        consumerCellphone: [
           { required: true, message: "会员手机号不能为空", trigger: "blur" },
           {
             pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
@@ -249,14 +249,14 @@ export default {
             trigger: "blur"
           }
         ],
-        email: [
+        consumerEmail: [
           {
             type: "email",
             message: "请输入正确的邮箱地址",
             trigger: ["blur", "change"]
           }
         ],
-        wechat: [
+        consumerWechat: [
           {
             pattern: /^.{1,128}$/,
             message: "长度范围需在1-128之间"
@@ -299,6 +299,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           return new Promise((resolve, reject) => {
+            this.consumerMap.id = this.$route.query.id;
             updateMerchantConsumer(this.consumerMap)
               .then(response => {
                 if (!response.id) {
@@ -335,7 +336,7 @@ export default {
       this.$refs[form].validate(valid => {
         if (valid) {
           var json = {};
-          json.consumerId = this.consumerMap.id;
+          json.consumerId = this.$route.query.id;
           json.walletId = this.consumerMap.walletId;
           json.remark = this.consumerWallet.remark;
           json.amount = this.consumerWallet.amount;
