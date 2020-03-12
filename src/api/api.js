@@ -6,7 +6,7 @@ import {getToken} from '@/utils/auth'
 
 export function login(username, password) {
   const salt = '78683a7a-f258-11e5-ab7f-00163e0043c9';
-  password = md5(password+salt);
+  // password = md5(password+salt);
   return request({
     url: '/user/login',
     method: 'post',
@@ -44,7 +44,7 @@ export function logout(token) {
 
 export function listMerchantConsumerPaging(form) {
   return request({
-    url: '/api/merchant/listMerchantConsumerPaging',
+    url: '/api/merchant/consumer/listMerchantConsumerPaging',
     method: 'get',
     params: {
       "name":form.name,
@@ -61,7 +61,7 @@ export function listMerchantConsumerPaging(form) {
 
 export function deleteMerchantConsumer(id) {
   return request({
-    url: '/api/merchant/deleteMerchantConsumer/'+id,
+    url: '/api/merchant/consumer/deleteMerchantConsumer/'+id,
     method: 'delete',
     params: {},
     headers:{
@@ -72,7 +72,7 @@ export function deleteMerchantConsumer(id) {
 
 export function addMerchantConsumer(form) {
   return request({
-    url: '/api/merchant/addMerchantConsumer',
+    url: '/api/merchant/consumer/addMerchantConsumer',
     method: 'post',
     data: {
       "name":form.name,
@@ -88,7 +88,7 @@ export function addMerchantConsumer(form) {
 
 export function updateMerchantConsumer(form) {
   return request({
-    url: '/api/merchant/updateMerchantConsumer',
+    url: '/api/merchant/consumer/updateMerchantConsumer',
     method: 'post',
     data: {
       "id":form.id,
@@ -107,7 +107,7 @@ export function updateMerchantConsumer(form) {
 
 export function getMerchantConsumer(id) {
   return request({
-    url: '/api/merchant/getMerchantConsumer',
+    url: '/api/merchant/consumer/getMerchantConsumer',
     method: 'get',
     params: {
       "consumerId":id
@@ -118,29 +118,15 @@ export function getMerchantConsumer(id) {
   })
 }
 
-export function editMerchantConsumerWallet(json) {
+
+export function listMerchantProductPaging(form) {
   return request({
-    url: '/api/merchant/rechargeMerchantConsumerBalance',
-    method: 'post',
-    data: {
-      "consumerId": json.consumerId,
-      "walletId": json.walletId,
-      "amount": json.amount,
-      "remark": json.remark
-    },
-    headers:{
-      "token":getToken()
-    }
-  })
-}
-
-
-
-export function listConsumerWalletTransactionPaging(form) {
-  return request({
-    url: '/api/merchant/listConsumerWalletTransactionPaging/'+ form.consumerId,
+    url: '/api/merchant/product/listMerchantProductPaging',
     method: 'get',
     params: {
+      "name":form.name,
+      "industryId": form.industryId,
+      "status": form.status,
       "pageNo":form.pageNo-1,
       "pageSize":form.pageSize
     },
@@ -149,6 +135,107 @@ export function listConsumerWalletTransactionPaging(form) {
     }
   })
 }
+
+
+export function deleteMerchantProduct(id) {
+  return request({
+    url: '/api/merchant/product/deleteMerchantProduct/'+id,
+    method: 'delete',
+    params: {},
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
+export function addMerchantProduct(form) {
+  return request({
+    url: '/api/merchant/product/addMerchantProduct',
+    method: 'post',
+    data: {
+      "name":form.name,
+      "originalPrice": form.originalPrice,
+      "price":form.price,
+      "count":form.count,
+      "image":form.image,
+      "context":form.context,
+      "industryId":form.industryId
+    },
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
+
+export function updateMerchantProduct(form) {
+  return request({
+    url: '/api/merchant/product/updateMerchantProduct',
+    method: 'post',
+    data: {
+      "id":form.id,
+      "name":form.name,
+      "originalPrice": form.originalPrice,
+      "status":form.status,
+      "price":form.price,
+      "count":form.count,
+      "image":form.image,
+      "context":form.context,
+      "industryId":form.industryId
+    },
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
+
+
+export function getMerchantProduct(id) {
+  return request({
+    url: '/api/merchant/product/getMerchantProduct',
+    method: 'get',
+    params: {
+      "productId":id
+    },
+    headers:{
+      "token":getToken()
+    }
+  })
+}
+
+
+// export function editMerchantConsumerWallet(json) {
+//   return request({
+//     url: '/api/merchant/consumer/rechargeMerchantConsumerBalance',
+//     method: 'post',
+//     data: {
+//       "consumerId": json.consumerId,
+//       "walletId": json.walletId,
+//       "amount": json.amount,
+//       "remark": json.remark
+//     },
+//     headers:{
+//       "token":getToken()
+//     }
+//   })
+// }
+
+
+
+// export function listConsumerWalletTransactionPaging(form) {
+//   return request({
+//     url: '/api/merchant/listConsumerWalletTransactionPaging/'+ form.consumerId,
+//     method: 'get',
+//     params: {
+//       "pageNo":form.pageNo-1,
+//       "pageSize":form.pageSize
+//     },
+//     headers:{
+//       "token": getToken()
+//     }
+//   })
+// }
 
 
 export function getFileUploadToken(filename, size) {

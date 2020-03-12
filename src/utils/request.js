@@ -26,13 +26,14 @@ service.interceptors.response.use(response => {
     })
     return 
   }
-  if (res.code !== 1 && res.code !== 0) {
+  
+  if (res.code != 0) {
     Message({
       message: res.msg,
       type: 'error',
       duration:  1000
     });
-    return
+    return Promise.reject(res.msg);
   }
   return res.data
 }, error => {

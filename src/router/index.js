@@ -23,19 +23,38 @@ export const constantRouterMap = [
   {
     path: '/cmp',
     component: Layout,
-    redirect: '/cmp/cmp',
+    redirect: '/cmp/listConsumer',
     name: 'cmp',
-    meta: {title: '会员管理', icon: 'example'},
+    meta: {title: '会员', icon: 'example'},
     children: [{
       path: 'listConsumer',
       name: 'listConsumer',
       component: () => import('@/views/cmp/listConsumer'),
-      meta: {title: '会员列表', icon: 'product-list'},
+      meta: {title: '会员管理', icon: 'product-list'},
     },{
       path: 'consumer',
       name: 'consumer',
       component: () => import('@/views/cmp/consumer'),
       meta: {title: '会员', icon: 'product-list'},
+      hidden: true
+    }]
+  },
+  {
+    path: '/productmp',
+    component: Layout,
+    redirect: '/productmp/listProduct',
+    name: 'productmp',
+    meta: {title: '商品', icon: 'example'},
+    children: [{
+      path: 'listProduct',
+      name: 'listProduct',
+      component: () => import('@/views/productmp/listProduct'),
+      meta: {title: '商品管理', icon: 'product-list'},
+    },{
+      path: 'product',
+      name: 'product',
+      component: () => import('@/views/productmp/product'),
+      meta: {title: '商品', icon: 'product-list'},
       hidden: true
     }]
   },

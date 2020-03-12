@@ -2,15 +2,21 @@
   <div class="app-container">
     <div>
       <el-input
-        v-model="consumerName"
-        name="consumerName"
-        placeholder="请输入会员名称"
+        v-model="name"
+        name="name"
+        placeholder="请输入商品名称"
         style="width:20%"
       ></el-input>
       <el-input
-        v-model="consumerCellphone"
-        name="consumerCellphone"
-        placeholder="请输入会员手机号"
+        v-model="industryId"
+        name="industryId"
+        placeholder="请选择商品类型"
+        style="margin-left: 40px;width:20%"
+      ></el-input>
+      <el-input
+        v-model="status"
+        name="status"
+        placeholder="请输入商品状态"
         style="margin-left: 40px;width:20%"
       ></el-input>
       <el-button
@@ -32,30 +38,50 @@
       style="padding-top:30px;display: none;padding-right:30px;padding-bottom:30px"
     >
       <el-table :data="tableData" style="width:100%" stripe>
-        <el-table-column
-          prop="consumerName"
-          label="会员名称"
+         <el-table-column
+          prop="id"
+          label="商品编号"
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="consumerCellphone"
-          label="会员手机号"
+          prop="name"
+          label="商品名称"
+          width="200"
+        ></el-table-column>
+         <el-table-column
+          prop="priority"
+          label="商品展示优先级"
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="consumerEmail"
-          label="会员邮箱"
+          prop="industry"
+          label="商品类型"
+          width="200"
+        ></el-table-column>
+         <el-table-column
+          prop="originalPrice"
+          label="商品原价"
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="consumerWechat"
-          label="会员微信"
+          prop="price"
+          label="商品真实价格"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          prop="count"
+          label="商品数量"
+          width="150"
+        ></el-table-column>
+         <el-table-column
+          prop="image"
+          label="商品图片"
           width="150"
         ></el-table-column>
         <el-table-column
-          prop="consumerBalance"
-          label="会员余额(分)"
-          width="100"
+          prop="context"
+          label="商品描述"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="ctime"
@@ -71,13 +97,8 @@
         ></el-table-column>
         <el-table-column fixed="right" width="200" label="操作">
             <template slot-scope="scope">
-             <!-- <el-button
-              @click.native.prevent="reduceWalletHandle(tableData[scope.$index].id)"
-              type="text">
-              扣款
-            </el-button> -->
             <el-button
-              @click.native.prevent="consumerHandle(tableData[scope.$index].id)"
+              @click.native.prevent="productHandle(tableData[scope.$index].id)"
               type="text">
               管理
             </el-button>
@@ -106,52 +127,76 @@
       >
       </el-pagination>
       <el-dialog
-        title="添加会员"
+        title="添加商品"
         :visible.sync="dialogVisible"
         v-if="dialogVisible"
       >
         <el-form
           label-width="100px"
-          :model="consumer"
-          :rules="consumerRules"
-          ref="consumer"
+          :model="product"
+          :rules="productRules"
+          ref="product"
         >
-          <el-form-item prop="name" label="会员名称:">
+          <el-form-item prop="name" label="商品名称:">
             <el-input
-              v-model="consumer.name"
-              placeholder="请输入会员名称"
+              v-model="product.name"
+              placeholder="请输入商品名称"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="cellphone" label="会员手机号:">
+          <el-form-item prop="priority" label="商品展示优先级:">
             <el-input
-              v-model="consumer.cellphone"
-              placeholder="请输入会员手机号"
+              v-model="product.priority"
+              placeholder="请输入商品展示优先级"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="email" label="会员邮箱:">
+          <el-form-item prop="originalPrice" label="商品原价（分）:">
             <el-input
-              v-model="consumer.email"
-              name="email"
+              v-model="product.originalPrice"
+              name="originalPrice"
               autocomplete="off"
-              placeholder="请输入会员邮箱"
+              placeholder="请输入商品原价"
             ></el-input>
           </el-form-item>
-          <el-form-item prop="wechat" label="会员微信号:">
+          <el-form-item prop="price" label="商品真实价格（分）:">
             <el-input
-              v-model="consumer.wechat"
-              name="wechat"
+              v-model="product.price"
+              name="price"
               autocomplete="off"
-              placeholder="请输入会员微信号"
+              placeholder="请输入商品真实价格"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="image" label="商品图片:">
+            <el-input
+              v-model="product.image"
+              name="image"
+              autocomplete="off"
+              placeholder="请上传商品图片"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="context" label="商品描述:">
+            <el-input
+              v-model="product.context"
+              name="context"
+              autocomplete="off"
+              placeholder="请输入商品描述"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="context" label="商品描述:">
+            <el-input
+              v-model="product.industryId"
+              name="industryId"
+              autocomplete="off"
+              placeholder="请选择商品类型"
             ></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button
             type="primary"
-            @click.native.prevent="addConsumerHandle('consumer')"
+            @click.native.prevent="addProductHandle('product')"
             >确定</el-button
           >
-          <el-button type="primary" @click="resetForm('consumer')"
+          <el-button type="primary" @click="resetForm('product')"
             >关闭</el-button
           >
         </span>
@@ -162,14 +207,14 @@
 
 <script>
 import {
-  listMerchantConsumerPaging,
-  deleteMerchantConsumer,
-  addMerchantConsumer
+  listMerchantProductPaging,
+  deleteMerchantProduct,
+  addMerchantProduct
 } from "@/api/api";
 import { dateFormat } from "@/utils/timeFormat";
 //   import {mapGetters} from 'vuex'
 export default {
-  name: "listConsumer",
+  name: "listProduct",
   //     computed: {
   //   // 使用对象展开运算符将 getter 混入 computed 对象中
   //     ...mapGetters([
@@ -178,42 +223,58 @@ export default {
   //   },
   data() {
     return {
-      consumerName: null,
-      consumerCellphone: null,
-      consumer: {
-        name: "",
-        cellphone: "",
-        email: null,
-        wechat: null
+      name: null,
+      industryId: null,
+      status: null,
+      product: {
+        name: null,
+        priority: 0,
+        originalPrice: 0,
+        price: 0,
+        count: 0,
+        image:null,
+        context: null,
+        industryId:null
       },
-      consumerRules: {
+      productRules: {
         name: [
-          { required: true, message: "会员名称不能为空", trigger: "blur" },
+          { required: true, message: "商品名称不能为空", trigger: "blur" },
           {
             pattern: /^.{1,128}$/,
             message: "长度范围需在1-128之间",
             trigger: "blur"
           }
         ],
-        cellphone: [
-          { required: true, message: "会员手机号不能为空", trigger: "blur" },
+        priority: [
+          { required: true, message: "商品优先级不能为空", trigger: "blur" },
           {
-            pattern: /^[1][3,4,5,7,8][0-9]{9}$/,
-            message: "手机号格式不对",
+            pattern: /^\d+$/,
+            message: "只能为整数",
             trigger: "blur"
           }
         ],
-        email: [
+        originalPrice: [
+          { required: true, message: "商品原价不能为空", trigger: "blur" },
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
+            pattern: /^\d+$/,
+            message: "只能为整数",
+            trigger: "blur"
           }
         ],
-        wechat: [
+        price: [
+          { required: true, message: "商品实际价格不能为空", trigger: "blur" },
           {
-            pattern: /^.{1,128}$/,
-            message: "长度范围需在1-128之间"
+            pattern: /^\d+$/,
+            message: "只能为整数",
+            trigger: "blur"
+          }
+        ],
+        count: [
+          { required: true, message: "商品数量不能为空", trigger: "blur" },
+          {
+            pattern: /^\d+$/,
+            message: "只能为整数",
+            trigger: "blur"
           }
         ]
       },
@@ -228,8 +289,8 @@ export default {
     };
   },
   methods: {
-    listMerchantConsumerPaging: function(json) {
-      listMerchantConsumerPaging(json)
+    listMerchantProductPaging: function(json) {
+      listMerchantProductPaging(json)
         .then(response => {
           if (!response.content) {
             this.$message({
@@ -255,11 +316,11 @@ export default {
     dateFormat: function(row, column) {
       return dateFormat(row, column);
     },
-    addConsumerHandle(formName) {
+    addProductHandle(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           return new Promise((resolve, reject) => {
-            addMerchantConsumer(this.consumer)
+            addMerchantProduct(this.product)
               .then(response => {
                 if (!response.id) {
                   this.$message({
@@ -272,15 +333,18 @@ export default {
                 this.$refs[formName].resetFields();
                 this.dialogVisible = false;
                 var json = {};
-                if (this.consumerName) {
-                  json.name = this.consumerName;
+                if (this.name) {
+                  json.name = this.name;
                 }
-                if (this.cellphone) {
-                  json.cellphone = this.cellphone;
+                if (this.industryId) {
+                  json.industryId = this.industryId;
+                }
+                if (this.status) {
+                  json.status = this.status;
                 }
                 json.pageNo = this.pageParam;
                 json.pageSize = this.pageSize;
-                this.listMerchantConsumerPaging(json);
+                this.listMerchantProductPaging(json);
                 resolve();
               })
               .catch(error => {
@@ -303,15 +367,18 @@ export default {
     },
     handle() {
       var json = {};
-      if (this.consumerName) {
-        json.name = this.consumerName;
+      if (this.name) {
+        json.name = this.name;
       }
-      if (this.consumerCellphone) {
-        json.cellphone = this.consumerCellphone;
+      if (this.industryId) {
+        json.industryId = this.industryId;
+      }
+      if (this.status) {
+        json.status = this.status;
       }
       json.pageNo = this.pageParam;
       json.pageSize = this.pageSize;
-      this.listMerchantConsumerPaging(json);
+      this.listMerchantProductPaging(json);
     },
     showExtra(extra) {
       this.$alert(extra, "配置参数", {
@@ -322,27 +389,27 @@ export default {
       var json = {};
       json.pageNo = this.pageParam;
       json.pageSize = val;
-      this.listMerchantConsumerPaging(json);
+      this.listMerchantProductPaging(json);
     },
     handleCurrentChange(val) {
       var json = {};
       json.pageNo = val;
       json.pageSize = this.pageSize;
-      this.listMerchantConsumerPaging(json);
+      this.listMerchantProductPaging(json);
     },
-    consumerHandle(id) {
+    productHandle(id) {
       // this.$store.dispatch('setConsumer', row)
-      this.$router.push({ path: "/cmp/consumer", query: { id: id } });
+      this.$router.push({ path: "/productmp/product", query: { id: id } });
     },
     deleteRow(index, rows, id, name) {
-      this.$confirm("此操作将永久删除该会员:" + name + ", 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该商品:" + name + ", 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
           return new Promise((resolve, reject) => {
-            deleteMerchantConsumer(id).then(response => {
+            deleteMerchantProduct(id).then(response => {
               console.log(response);
               this.$message({
                 message: "删除成功",
@@ -367,7 +434,7 @@ export default {
       var json = {};
       json.pageNo = this.pageParam;
       json.pageSize = this.pageSize;
-      this.listMerchantConsumerPaging(json);
+      this.listMerchantProductPaging(json);
     });
   }
 };
