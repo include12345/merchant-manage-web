@@ -7,7 +7,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 import VCharts from 'v-charts'
 import '@/styles/index.scss' // global css
-
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
 import App from './App'
 import router from './router'
 import store from './store'
@@ -19,6 +20,7 @@ import '@/permission' // permission control
 
 Vue.use(ElementUI, {locale})
 Vue.use(VCharts)
+Vue.use(mavonEditor);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

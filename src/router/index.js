@@ -24,37 +24,42 @@ export const constantRouterMap = [
     path: '/cmp',
     component: Layout,
     redirect: '/cmp/listConsumer',
-    name: 'cmp',
-    meta: {title: '会员', icon: 'example'},
+    name: '会员管理',
+    meta: {title: '会员管理', icon: 'example'},
     children: [{
       path: 'listConsumer',
       name: 'listConsumer',
       component: () => import('@/views/cmp/listConsumer'),
-      meta: {title: '会员管理', icon: 'product-list'},
+      meta: {title: '会员列表', icon: 'product-list'},
     },{
       path: 'consumer',
       name: 'consumer',
       component: () => import('@/views/cmp/consumer'),
-      meta: {title: '会员', icon: 'product-list'},
-      hidden: true
+      meta: {title: '会员添加', icon: 'product-list'},
+      // hidden: true
     }]
   },
   {
     path: '/productmp',
     component: Layout,
-    redirect: '/productmp/listProduct',
+    redirect: '/productmp/productmp',
     name: 'productmp',
-    meta: {title: '商品', icon: 'example'},
+    meta: {title: '商品管理', icon: 'example'},
     children: [{
       path: 'listProduct',
       name: 'listProduct',
       component: () => import('@/views/productmp/listProduct'),
-      meta: {title: '商品管理', icon: 'product-list'},
+      meta: {title: '商品列表', icon: 'product-list'},
     },{
-      path: 'product',
-      name: 'product',
-      component: () => import('@/views/productmp/product'),
-      meta: {title: '商品', icon: 'product-list'},
+      path: 'addProduct',
+      name: 'addProduct',
+      component: () => import('@/views/productmp/addProduct'),
+      meta: {title: '商品添加', icon: 'product-list'},
+    },{
+      path: 'updateProduct',
+      name: 'updateProduct',
+      component: () => import('@/views/productmp/updateProduct'),
+      meta: {title: '商品修改', icon: 'product-list'},
       hidden: true
     }]
   },

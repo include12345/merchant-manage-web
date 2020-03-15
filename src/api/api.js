@@ -119,7 +119,7 @@ export function getMerchantConsumer(id) {
 }
 
 
-export function listMerchantProductPaging(form) {
+export function listProductPaging(form) {
   return request({
     url: '/api/merchant/product/listMerchantProductPaging',
     method: 'get',
@@ -137,7 +137,7 @@ export function listMerchantProductPaging(form) {
 }
 
 
-export function deleteMerchantProduct(id) {
+export function deleteProduct(id) {
   return request({
     url: '/api/merchant/product/deleteMerchantProduct/'+id,
     method: 'delete',
@@ -148,7 +148,7 @@ export function deleteMerchantProduct(id) {
   })
 }
 
-export function addMerchantProduct(form) {
+export function addProduct(form) {
   return request({
     url: '/api/merchant/product/addMerchantProduct',
     method: 'post',
@@ -168,12 +168,12 @@ export function addMerchantProduct(form) {
 }
 
 
-export function updateMerchantProduct(form) {
+export function updateProduct(id, form) {
   return request({
     url: '/api/merchant/product/updateMerchantProduct',
     method: 'post',
     data: {
-      "id":form.id,
+      "id":id,
       "name":form.name,
       "originalPrice": form.originalPrice,
       "status":form.status,
@@ -191,13 +191,23 @@ export function updateMerchantProduct(form) {
 
 
 
-export function getMerchantProduct(id) {
+export function getProduct(id) {
   return request({
     url: '/api/merchant/product/getMerchantProduct',
     method: 'get',
     params: {
       "productId":id
     },
+    headers:{
+      "token":getToken()
+    }
+  })
+}
+
+export function listIndustrys() {
+  return request({
+    url: '/api/industry/listIndustryAll',
+    method: 'get',
     headers:{
       "token":getToken()
     }
@@ -249,16 +259,16 @@ export function getFileUploadToken(filename, size) {
   })
 }
 
-// export function fileUpload(formData) {
-//   return file({
-//     url: '/api/alien/upload',
-//     method: 'post',
-//     data: formData,
-//     headers:{
-//       "Content-Type":'multipart/form-data'
-//     }
-//   })
-// }
+export function fileUpload(formData) {
+  return request({
+    url: '/file/uploadPicture',
+    method: 'post',
+    data: formData,
+    headers:{
+      "Content-Type":'multipart/form-data'
+    }
+  })
+}
 
 
         

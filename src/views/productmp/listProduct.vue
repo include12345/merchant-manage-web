@@ -27,7 +27,7 @@
       >
       <el-button
         type="text"
-        @click="dialogVisible = true"
+        @click="addProductHandle()"
         style="float:right;margin-right:20px"
         >新增</el-button
       >
@@ -43,6 +43,13 @@
           label="商品编号"
           width="200"
         ></el-table-column>
+          <el-table-column
+          prop="image"
+          label="商品图片"
+          width="150"
+          align="center"
+        ><template slot-scope="scope"><img style="height: 80px" :src="scope.row.image"></template>
+        </el-table-column>
         <el-table-column
           prop="name"
           label="商品名称"
@@ -73,11 +80,6 @@
           label="商品数量"
           width="150"
         ></el-table-column>
-         <el-table-column
-          prop="image"
-          label="商品图片"
-          width="150"
-        ></el-table-column>
         <el-table-column
           prop="context"
           label="商品描述"
@@ -98,7 +100,7 @@
         <el-table-column fixed="right" width="200" label="操作">
             <template slot-scope="scope">
             <el-button
-              @click.native.prevent="productHandle(tableData[scope.$index].id)"
+              @click.native.prevent="editProductHandle(tableData[scope.$index].id)"
               type="text">
               管理
             </el-button>
@@ -116,171 +118,25 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="page"
-        :page-sizes="[10, 50, 100, 500]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="sizeCount"
-      >
-      </el-pagination>
-      <el-dialog
-        title="添加商品"
-        :visible.sync="dialogVisible"
-        v-if="dialogVisible"
-      >
-        <el-form
-          label-width="100px"
-          :model="product"
-          :rules="productRules"
-          ref="product"
-        >
-          <el-form-item prop="name" label="商品名称:">
-            <el-input
-              v-model="product.name"
-              placeholder="请输入商品名称"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="priority" label="商品展示优先级:">
-            <el-input
-              v-model="product.priority"
-              placeholder="请输入商品展示优先级"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="originalPrice" label="商品原价（分）:">
-            <el-input
-              v-model="product.originalPrice"
-              name="originalPrice"
-              autocomplete="off"
-              placeholder="请输入商品原价"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="price" label="商品真实价格（分）:">
-            <el-input
-              v-model="product.price"
-              name="price"
-              autocomplete="off"
-              placeholder="请输入商品真实价格"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="image" label="商品图片:">
-            <el-input
-              v-model="product.image"
-              name="image"
-              autocomplete="off"
-              placeholder="请上传商品图片"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="context" label="商品描述:">
-            <el-input
-              v-model="product.context"
-              name="context"
-              autocomplete="off"
-              placeholder="请输入商品描述"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="context" label="商品描述:">
-            <el-input
-              v-model="product.industryId"
-              name="industryId"
-              autocomplete="off"
-              placeholder="请选择商品类型"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            @click.native.prevent="addProductHandle('product')"
-            >确定</el-button
-          >
-          <el-button type="primary" @click="resetForm('product')"
-            >关闭</el-button
-          >
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import {
-  listMerchantProductPaging,
-  deleteMerchantProduct,
-  addMerchantProduct
+  listProductPaging,
+  deleteProduct
 } from "@/api/api";
 import { dateFormat } from "@/utils/timeFormat";
-//   import {mapGetters} from 'vuex'
 export default {
   name: "listProduct",
-  //     computed: {
-  //   // 使用对象展开运算符将 getter 混入 computed 对象中
-  //     ...mapGetters([
-  //       'consumer'
-  //     ])
-  //   },
   data() {
     return {
       name: null,
       industryId: null,
       status: null,
-      product: {
-        name: null,
-        priority: 0,
-        originalPrice: 0,
-        price: 0,
-        count: 0,
-        image:null,
-        context: null,
-        industryId:null
-      },
-      productRules: {
-        name: [
-          { required: true, message: "商品名称不能为空", trigger: "blur" },
-          {
-            pattern: /^.{1,128}$/,
-            message: "长度范围需在1-128之间",
-            trigger: "blur"
-          }
-        ],
-        priority: [
-          { required: true, message: "商品优先级不能为空", trigger: "blur" },
-          {
-            pattern: /^\d+$/,
-            message: "只能为整数",
-            trigger: "blur"
-          }
-        ],
-        originalPrice: [
-          { required: true, message: "商品原价不能为空", trigger: "blur" },
-          {
-            pattern: /^\d+$/,
-            message: "只能为整数",
-            trigger: "blur"
-          }
-        ],
-        price: [
-          { required: true, message: "商品实际价格不能为空", trigger: "blur" },
-          {
-            pattern: /^\d+$/,
-            message: "只能为整数",
-            trigger: "blur"
-          }
-        ],
-        count: [
-          { required: true, message: "商品数量不能为空", trigger: "blur" },
-          {
-            pattern: /^\d+$/,
-            message: "只能为整数",
-            trigger: "blur"
-          }
-        ]
-      },
       dialogVisible: false,
       id: this.id,
-
       tableData: [],
       pageParam: 1,
       pageSize: 10,
@@ -290,7 +146,7 @@ export default {
   },
   methods: {
     listMerchantProductPaging: function(json) {
-      listMerchantProductPaging(json)
+      listProductPaging(json)
         .then(response => {
           if (!response.content) {
             this.$message({
@@ -316,50 +172,9 @@ export default {
     dateFormat: function(row, column) {
       return dateFormat(row, column);
     },
-    addProductHandle(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          return new Promise((resolve, reject) => {
-            addMerchantProduct(this.product)
-              .then(response => {
-                if (!response.id) {
-                  this.$message({
-                    message: "添加失败：" + response,
-                    type: "error",
-                    duration: 1000
-                  });
-                  return;
-                }
-                this.$refs[formName].resetFields();
-                this.dialogVisible = false;
-                var json = {};
-                if (this.name) {
-                  json.name = this.name;
-                }
-                if (this.industryId) {
-                  json.industryId = this.industryId;
-                }
-                if (this.status) {
-                  json.status = this.status;
-                }
-                json.pageNo = this.pageParam;
-                json.pageSize = this.pageSize;
-                this.listMerchantProductPaging(json);
-                resolve();
-              })
-              .catch(error => {
-                this.$message({
-                  message: "无权限：" + error,
-                  type: "warning",
-                  duration: 1000
-                });
-                reject(error);
-              });
-          });
-        } else {
-            return false;
-        }
-      });
+    addProductHandle() {
+      this.$router.push({ path: "/productmp/addProduct"});
+      
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -397,9 +212,9 @@ export default {
       json.pageSize = this.pageSize;
       this.listMerchantProductPaging(json);
     },
-    productHandle(id) {
+    editProductHandle(id) {
       // this.$store.dispatch('setConsumer', row)
-      this.$router.push({ path: "/productmp/product", query: { id: id } });
+      this.$router.push({ path: "/productmp/updateProduct", query: { id: id } });
     },
     deleteRow(index, rows, id, name) {
       this.$confirm("此操作将永久删除该商品:" + name + ", 是否继续?", "提示", {
@@ -409,7 +224,7 @@ export default {
       })
         .then(() => {
           return new Promise((resolve, reject) => {
-            deleteMerchantProduct(id).then(response => {
+            deleteProduct(id).then(response => {
               console.log(response);
               this.$message({
                 message: "删除成功",
