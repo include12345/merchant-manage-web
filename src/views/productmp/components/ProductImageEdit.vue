@@ -24,7 +24,10 @@ export default {
     name: "ProductImageEdit",
     components: {UploadImages},
     props: {
-       value: Object,
+       value: {
+           image: Object,
+           context: Object
+       },
        isEdit: {
         type: Boolean,
         default: false
@@ -33,9 +36,8 @@ export default {
     data() {
         return {
             //编辑模式时是否初始化成功
-            hasEditCreated:false,
+            hasEditCreated:false
             //商品富文本详情激活类型
-            activeHtmlName: 'pc'
         }
     },
     computed: {
@@ -70,10 +72,7 @@ export default {
             this.value.image = newValue[0];
             if (newValue.length > 1) {
               for (let i = 1; i < newValue.length; i++) {
-                this.value.image += newValue[i];
-                if (i !== newValue.length - 1) {
-                  this.value.image += ',';
-                }
+                this.value.image = this.value.image + ',' + newValue[i];
               }
             }
           }
@@ -105,7 +104,6 @@ export default {
                     // 第一步.将图片上传到服务器.
                 var formdata = new FormData();
                 formdata.append('file', $file);
-                // formdata.append('uploadTokenUuid', response.message)
                 console.log(formdata)
                 fileUpload(formdata).then(response => {
                     console.log(response)

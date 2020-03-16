@@ -14,7 +14,7 @@
         <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="imageUrl" alt="">
+            <img width="100%" :src="image" alt="">
         </el-dialog>
     </div>
 </template>
@@ -37,7 +37,7 @@ export default {
                 'token':this.token
             },
             dialogVisible: false,
-            imageUrl:null
+            image:null
         }
     },
     computed: {
@@ -62,7 +62,7 @@ export default {
         },
         handlePreview(file) {
             this.dialogVisible = true;
-            this.imageUrl = file.url;
+            this.image = file.url;
         },
         beforeUpload(file) {
          console.log(file)
@@ -84,7 +84,7 @@ export default {
             })
             return;
         }
-        this.fileList.push({url: res.data.url});
+        this.fileList.push(res.data.url);
         this.emitInput(this.fileList);
       },
       handleExceed(files, fileList) {
