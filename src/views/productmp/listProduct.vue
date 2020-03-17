@@ -48,7 +48,7 @@
           label="商品图片"
           width="150"
           align="center"
-        ><template slot-scope="scope"><img style="height: 80px" :src="scope.row.image"></template>
+        ><template slot-scope="scope"><img style="height: 80px" :src="scope.row.imageMaster"></template>
         </el-table-column>
         <el-table-column
           prop="name"
@@ -81,8 +81,8 @@
           width="150"
         ></el-table-column>
         <el-table-column
-          prop="context"
-          label="商品描述"
+          prop="status"
+          label="商品状态"
           width="150"
         ></el-table-column>
         <el-table-column

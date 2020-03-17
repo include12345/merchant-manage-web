@@ -24,10 +24,7 @@ export default {
     name: "ProductImageEdit",
     components: {UploadImages},
     props: {
-       value: {
-           image: Object,
-           context: Object
-       },
+       value: Object,
        isEdit: {
         type: Boolean,
         default: false
@@ -66,6 +63,7 @@ export default {
           return images;
         },
         set:function (newValue) {
+            console.log(newValue)
           if (newValue == null || newValue.length === 0) {
             this.value.image = null;
           } else {
@@ -75,6 +73,7 @@ export default {
                 this.value.image = this.value.image + ',' + newValue[i];
               }
             }
+            console.log(this.value.image)
           }
         }
       }
@@ -107,21 +106,13 @@ export default {
                 console.log(formdata)
                 fileUpload(formdata).then(response => {
                     console.log(response)
-                    if(response.code !== 200) {
-                        this.$message({
-                        message: '上传图片失败',
-                        type: 'error',
-                        duration: 1000
-                        })
-                        return;
-                    }
                     // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
                     /**
                     * $vm 指为mavonEditor实例，可以通过如下两种方式获取
                     * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
                     * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
                     */
-                   
+
                     this.$refs.md.$img2Url(pos, response.url);
                 }).catch(error => {
                     this.$message({

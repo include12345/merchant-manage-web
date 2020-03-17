@@ -154,6 +154,7 @@ export function addProduct(form) {
     method: 'post',
     data: {
       "name":form.name,
+      "priority":form.priority,
       "originalPrice": form.originalPrice,
       "price":form.price,
       "count":form.count,
@@ -176,6 +177,7 @@ export function updateProduct(id, form) {
       "id":id,
       "name":form.name,
       "originalPrice": form.originalPrice,
+      "priority":form.priority,
       "status":form.status,
       "price":form.price,
       "count":form.count,

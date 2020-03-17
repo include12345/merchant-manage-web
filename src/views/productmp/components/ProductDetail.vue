@@ -55,7 +55,7 @@ export default {
     created() {
         if(this.isEdit) {
             getProduct(this.$route.query.id).then(response=>{
-                this.product=response.data;
+                this.product = response;
             });
         }
     },

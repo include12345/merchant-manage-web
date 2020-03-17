@@ -89,12 +89,13 @@ export default {
             this.handleEditCreated();
         },
         selectIndustry: function (newValue) {
-            if (newValue != null && newValue.length === 2) {
-                this.value.industryId = newValue[1];
-                this.value.industryName = this.getIndustryById(this.value.industryId);
+            console.log(newValue)
+            if (newValue != null) {
+                this.value.industryId = newValue[0];
+                this.value.label = this.getIndustryById(this.value.industryId);
             } else {
                 this.value.industryId = null;
-                this.value.industryName = null;
+                this.value.label = null;
             }
         }
     },
@@ -107,24 +108,23 @@ export default {
       },
       listIndustrys() {
         listIndustrys().then(response => {
-          let list = response.data;
+          let list = response;
           if(list === undefined || list == null) {
               return;
           } 
           this.industryOptions = [];
           for (let i = 0; i < list.length; i++) {
-            this.industryOptions.push({label: list[i].name, value: list[i].id});
+            this.industryOptions.push({label: list[i].level1, value: list[i].id});
           }
         });
       },
       getIndustryById(id){
-        let name=null;
         for(let i=0; i<this.industryOptions.length; i++){
             if(this.industryOptions[i].value===id){
-              return this.productCateOptions[i].children[j].label;
+              return this.industryOptions[i].label;
             }
         }
-        return name;
+        return null;
       },
       handleNext(formName){
         this.$refs[formName].validate((valid) => {
