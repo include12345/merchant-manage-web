@@ -46,7 +46,7 @@ export default {
                 count: 0,
                 status: 0,
                 image:null,
-                context: null,
+                context: '',
                 industryId:null
             },
             showStatus: [true, false]
