@@ -70,15 +70,15 @@ export function deleteMerchantConsumer(id) {
   })
 }
 
-export function addMerchantConsumer(form) {
+export function addConsumer(form) {
   return request({
     url: '/api/merchant/consumer/addMerchantConsumer',
     method: 'post',
     data: {
-      "name":form.name,
-      "cellphone": form.cellphone,
-      "email":form.email,
-      "wechat":form.wechat
+      "name":form.consumerName,
+      "cellphone": form.consumerCellphone,
+      "email":form.consumerEmail,
+      "wechat":form.consumerWechat
     },
     headers:{
       "token": getToken()
@@ -86,12 +86,12 @@ export function addMerchantConsumer(form) {
   })
 }
 
-export function updateMerchantConsumer(form) {
+export function updateConsumer(id, form) {
   return request({
     url: '/api/merchant/consumer/updateMerchantConsumer',
     method: 'post',
     data: {
-      "id":form.id,
+      "id":id,
       "name":form.consumerName,
       "cellphone": form.consumerCellphone,
       "email":form.consumerEmail,
@@ -105,7 +105,7 @@ export function updateMerchantConsumer(form) {
 
 
 
-export function getMerchantConsumer(id) {
+export function getConsumer(id) {
   return request({
     url: '/api/merchant/consumer/getMerchantConsumer',
     method: 'get',

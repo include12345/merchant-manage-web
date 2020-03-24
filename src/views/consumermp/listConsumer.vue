@@ -21,7 +21,7 @@
       >
       <el-button
         type="text"
-        @click="dialogVisible = true"
+        @click="addConsumerHandle()"
         style="float:right;margin-right:20px"
         >新增</el-button
       >
@@ -77,7 +77,7 @@
               扣款
             </el-button> -->
             <el-button
-              @click.native.prevent="consumerHandle(tableData[scope.$index].id)"
+              @click.native.prevent="editConsumerHandle(tableData[scope.$index].id)"
               type="text">
               管理
             </el-button>
@@ -95,67 +95,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="page"
-        :page-sizes="[10, 50, 100, 500]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="sizeCount"
-      >
-      </el-pagination>
-      <el-dialog
-        title="添加会员"
-        :visible.sync="dialogVisible"
-        v-if="dialogVisible"
-      >
-        <el-form
-          label-width="100px"
-          :model="consumer"
-          :rules="consumerRules"
-          ref="consumer"
-        >
-          <el-form-item prop="name" label="会员名称:">
-            <el-input
-              v-model="consumer.name"
-              placeholder="请输入会员名称"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="cellphone" label="会员手机号:">
-            <el-input
-              v-model="consumer.cellphone"
-              placeholder="请输入会员手机号"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="email" label="会员邮箱:">
-            <el-input
-              v-model="consumer.email"
-              name="email"
-              autocomplete="off"
-              placeholder="请输入会员邮箱"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="wechat" label="会员微信号:">
-            <el-input
-              v-model="consumer.wechat"
-              name="wechat"
-              autocomplete="off"
-              placeholder="请输入会员微信号"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            @click.native.prevent="addConsumerHandle('consumer')"
-            >确定</el-button
-          >
-          <el-button type="primary" @click="resetForm('consumer')"
-            >关闭</el-button
-          >
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -163,8 +102,7 @@
 <script>
 import {
   listMerchantConsumerPaging,
-  deleteMerchantConsumer,
-  addMerchantConsumer
+  deleteMerchantConsumer
 } from "@/api/api";
 import { dateFormat } from "@/utils/timeFormat";
 //   import {mapGetters} from 'vuex'
@@ -255,47 +193,8 @@ export default {
     dateFormat: function(row, column) {
       return dateFormat(row, column);
     },
-    addConsumerHandle(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          return new Promise((resolve, reject) => {
-            addMerchantConsumer(this.consumer)
-              .then(response => {
-                if (!response.id) {
-                  this.$message({
-                    message: "添加失败：" + response,
-                    type: "error",
-                    duration: 1000
-                  });
-                  return;
-                }
-                this.$refs[formName].resetFields();
-                this.dialogVisible = false;
-                var json = {};
-                if (this.consumerName) {
-                  json.name = this.consumerName;
-                }
-                if (this.cellphone) {
-                  json.cellphone = this.cellphone;
-                }
-                json.pageNo = this.pageParam;
-                json.pageSize = this.pageSize;
-                this.listMerchantConsumerPaging(json);
-                resolve();
-              })
-              .catch(error => {
-                this.$message({
-                  message: "无权限：" + error,
-                  type: "warning",
-                  duration: 1000
-                });
-                reject(error);
-              });
-          });
-        } else {
-            return false;
-        }
-      });
+    addConsumerHandle() {
+      this.$router.push({ path: "/consumermp/addConsumer"});
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -330,9 +229,9 @@ export default {
       json.pageSize = this.pageSize;
       this.listMerchantConsumerPaging(json);
     },
-    consumerHandle(id) {
+    editConsumerHandle(id) {
       // this.$store.dispatch('setConsumer', row)
-      this.$router.push({ path: "/cmp/consumer", query: { id: id } });
+        this.$router.push({ path: "/consumermp/updateConsumer", query: { id: id } });
     },
     deleteRow(index, rows, id, name) {
       this.$confirm("此操作将永久删除该会员:" + name + ", 是否继续?", "提示", {

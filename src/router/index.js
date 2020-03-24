@@ -21,22 +21,28 @@ export const constantRouterMap = [
     }]
   },
   {
-    path: '/cmp',
+    path: '/consumermp',
     component: Layout,
-    redirect: '/cmp/listConsumer',
+    redirect: '/consumermp/listConsumer',
     name: '会员管理',
     meta: {title: '会员管理', icon: 'example'},
     children: [{
       path: 'listConsumer',
       name: 'listConsumer',
-      component: () => import('@/views/cmp/listConsumer'),
-      meta: {title: '会员列表', icon: 'product-list'},
+      component: () => import('@/views/consumermp/listConsumer'),
+      meta: {title: '会员列表', icon: 'consumer-list'},
     },{
-      path: 'consumer',
-      name: 'consumer',
-      component: () => import('@/views/cmp/consumer'),
-      meta: {title: '会员添加', icon: 'product-list'},
+      path: 'addConsumer',
+      name: 'addConsumer',
+      component: () => import('@/views/consumermp/addConsumer'),
+      meta: {title: '会员添加', icon: 'consumer-list'},
       // hidden: true
+    },{
+      path: 'updateConsumer',
+      name: 'updateConsumer',
+      component: () => import('@/views/consumermp/updateConsumer'),
+      meta: {title: '会员信息修改', icon: 'consumer-list'},
+      hidden: true
     }]
   },
   {
