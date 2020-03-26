@@ -217,6 +217,37 @@ export function listIndustrys() {
 }
 
 
+export function listMerchantOrderPaging(form) {
+  return request({
+    url: '/api/merchant/order/listMerchantOrderPaging',
+    method: 'get',
+    params: {
+      "orderSn": form.orderSn,
+      "name":form.name,
+      "type": form.type,
+      "status": form.status,
+      "pageNo":form.pageNo-1,
+      "pageSize":form.pageSize
+    },
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
+export function listOrderTransaction(orderId) {
+  return request({
+    url: '/api/merchant/order/listOrderTransaction',
+    method: 'get',
+    params: {
+      "orderId":orderId
+    },
+    headers:{
+      "token": getToken()
+    }
+  })
+}
+
 // export function editMerchantConsumerWallet(json) {
 //   return request({
 //     url: '/api/merchant/consumer/rechargeMerchantConsumerBalance',

@@ -69,6 +69,19 @@ export const constantRouterMap = [
       hidden: true
     }]
   },
+  {
+    path: '/ordermp',
+    component: Layout,
+    redirect: '/ordermp/ordermp',
+    name: 'ordermp',
+    meta: {title: '订单管理', icon: 'example'},
+    children: [{
+      path: 'listOrder',
+      name: 'listOrder',
+      component: () => import('@/views/ordermp/listOrder'),
+      meta: {title: '订单列表', icon: 'product-list'},
+    }]
+  },
   // {
   //   path: '/omp',
   //   component: Layout,

@@ -10,7 +10,7 @@
             <el-form-item label="邮箱：" prop="consumerEmail">
                 <el-input v-model="value.consumerEmail"></el-input>
             </el-form-item>
-            <el-form-item label="微信号：" prop="priconsumerWechatce">
+            <el-form-item label="微信号：" prop="consumerWechat">
                 <el-input v-model="value.consumerWechat"></el-input>
             </el-form-item>
              <el-form-item style="text-align: center">
