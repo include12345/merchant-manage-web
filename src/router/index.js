@@ -82,6 +82,19 @@ export const constantRouterMap = [
       meta: {title: '订单列表', icon: 'product-list'},
     }]
   },
+  {
+    path: '/chat',
+    component: Layout,
+    redirect: '/chat/index',
+    name: 'chat-index',
+    meta: {title: '聊天工具', icon: 'example'},
+    children: [{
+      path: 'index',
+      name: 'chat-index',
+      component: () => import('@/views/chat/index'),
+      meta: {title: '聊天工具', icon: 'product-list'},
+    }]
+  },
   // {
   //   path: '/omp',
   //   component: Layout,

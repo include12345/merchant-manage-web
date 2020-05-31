@@ -1,6 +1,9 @@
 const param = {
     state: {
-        consumer: {}
+        consumer: {},
+        active: 'message',
+        unreadReqCount: 0,
+        unreadMsgCount: 0,
     },
 
     mutations: {
