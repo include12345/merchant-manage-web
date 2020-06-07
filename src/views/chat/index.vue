@@ -26,10 +26,10 @@
               {{ "消息" }}
             </mt-tab-item>
             <mt-tab-item id="contact">
-              <i slot="icon" class="icon icon-users"></i>
               <mt-badge size="small" color="red" v-show="unreadReqCount">
                 {{ unreadReqCountMothod }}
               </mt-badge>
+              <i slot="icon" class="icon icon-users"></i>
               {{ "联系人" }}
             </mt-tab-item>
             <mt-tab-item id="aboutme">
@@ -88,7 +88,7 @@ export default {
       },
       set(value) {
         this.$Lazyload.lazyLoadHandler();
-        this.$$store.commit("setActive", value);
+        this.$store.dispatch("setActive", value);
       }
     }
   },
@@ -101,14 +101,14 @@ export default {
 
 <style lang="scss">
 .c-index {
-  //   width: 100%;
-  //   height: 100%;
-  .content {
     // width: 100%;
-    position: fixed;
-    top: 40px;
+    // height: 100%;
+    margin-top: 20px;
+  .content {
+    width: 100%;
+    // top: 40px;
     // left: 0;
-    height: calc(100%-95px);
+    height: calc(100%-50px) !important;
     background-color: bisque;
     .mint-tab-container {
       //   width: 100%;
