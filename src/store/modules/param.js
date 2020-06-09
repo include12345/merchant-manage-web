@@ -8,12 +8,12 @@ const param = {
         messages:{},
         unreadReqCount: 0,
         unreadMsgCount: 0,
-        contacts: {},
+        contacts: [],
         friendsInfo: {},
         requestContacts:[],
         nearbyPeoples: [],
         connected: false,
-        active: 'contact',
+        active: 'message',
         currentFrom: null,
         lostConnect: false,
         unSendMsg:[],
@@ -45,6 +45,23 @@ const param = {
                 addMessage(state, message)
             })
         },
+        GET_CONTACTS: (state, contacts) => {
+            state.contacts = contacts
+        },
+        CLEAR_FRIEND_INFO: (state) => {
+            state.friendsInfo = {}
+        },
+        GET_FRIEND_INFO: (state, {friendName, friendInfo}) => {
+            Vue.set(state.friendsInfo, friendName, friendInfo)
+        },
+        SET_MASK: (state, {friendName, remark}) => {
+            let info = state.friendsInfo[friendName]
+            if (info) {
+              Vue.set(state.friendsInfo[friendName], 'remark', remark)
+            } else {
+              Vue.set(state.friendsInfo, friendName, {remark})
+            }
+        }
     },
 
     actions: {
@@ -67,6 +84,84 @@ const param = {
                     commit('RECEIVE_ALL', {messages})
                   }
                   resolve(true)
+                }
+              })
+            })
+        },
+        getContacts({commit}) {
+            var contacts = [
+                {
+                    remark: "T",
+                    friendsInfo: [{
+                        username: 'test',
+                    },{
+                        username: 'test2',
+                    },{
+                        username: 'test3',
+                    }]
+                },
+                {
+                    remark: "L",
+                    friendsInfo: [{
+                        username: 'test',
+                    },{
+                        username: 'test2',
+                    },{
+                        username: 'test3',
+                    }]
+                },{
+                    remark: "L1",
+                    friendsInfo: [{
+                        username: 'test',
+                    },{
+                        username: 'test2',
+                    },{
+                        username: 'test3',
+                    }]
+                },{
+                    remark: "L2",
+                    friendsInfo: [{
+                        username: 'test',
+                    },{
+                        username: 'test2',
+                    },{
+                        username: 'test3',
+                    }]
+                },{
+                    remark: "L3",
+                    friendsInfo: [{
+                        username: 'test',
+                    },{
+                        username: 'test2',
+                    },{
+                        username: 'test3',
+                    }]
+                }
+            ]
+            // api.getContacts(contacts => {
+                commit('GET_CONTACTS', contacts)
+                // commit('CLEAR_FRIEND_INFO')
+                // for (let index in contacts) {
+                //     let contact = contacts[index]
+                //     contact.forEach(c => {
+                //         if (c.friendsInfo) {
+                //             const friendName = c.friendsInfo.username
+                //             const friendInfo = c.friendInfo
+                //             friendInfo.remark = c.remark;
+                //             commit('GET_FRIEND_INFO', {friendName, friendInfo})
+                //         }
+                //     })
+                // }
+            // })
+        },
+        setRemark({commit}, payload){
+            return new Promise((resolve, reject) => {
+              api.setRemark(payload, (res) => {
+                if (res) {
+                  commit('SET_MASK', payload)
+                  resolve()
+                } else {
+                  reject()
                 }
               })
             })

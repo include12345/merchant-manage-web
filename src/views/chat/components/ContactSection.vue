@@ -7,14 +7,15 @@
                     {{unreadReqCountFormat}}
                 </mt-badge>
             </mt-cell>
-            <mt-index-section class="contact" v-for="(v, k, i) in contacts" :index="k" :key="i">
-                <mt-cell v-for="(n, j) in v" 
-                :key="j" 
-                :title="(friendsInfo[n.friendName] ? friendsInfo[n.friendName].remark : '') ||n.friendName"
-                @click.native="toFriendCard(n.friendName)">
-
-                </mt-cell>
-            </mt-index-section>
+            <template v-for="contact in contacts">
+                <mt-index-section class="contact" :index="contact.remark">
+                    <template v-for="friendInfo in contact.friendsInfo">
+                        <mt-cell :title="friendInfo.username"
+                        @click.native="toFriendCard(friendInfo.friendName)">
+                        </mt-cell>
+                    </template>
+                </mt-index-section>
+            </template>
         </mt-index-list>
     </div>
 </template>
@@ -25,8 +26,7 @@ export default {
     computed: {
         ...mapGetters([
             'contacts',
-            'unreadReqCount',
-            'friendsInfo'
+            'unreadReqCount'
         ]),
         unreadReqCountFormat() {
             return this.unreadReqCount > 99 ? '99+' : this.unreadReqCount
@@ -42,7 +42,12 @@ export default {
         toFriendCard(friendName) {
             this.$router.push({path: '/friendCard', query: {friendName}})
         }
-    }
+    },
+    beforeCreate: function() {
+    this.$nextTick(function() {
+      this.$store.dispatch("getContacts");
+    });
+  }
 }
 </script>
 <style lang="scss">

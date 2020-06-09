@@ -40,15 +40,7 @@ const app = {
             }
             addMessage(state, message)
         },
-        GET_CONTACTS: (state, contacts) => {
-            state.param.contacts = contacts
-        },
-        GET_FRIEND_INFO: (state, {friendName, friendInfo}) => {
-            Vue.set(state.param.friendInfo, friendName, friendInfo)
-        },
-        CLEAR_FRIEND_INFO: state => {
-            state.param.friendInfo = {}
-        },
+        
         SWITCH_SESSION: (state, {from, remark}) => {
             setCurrentSession(state, from, remark)
         },
