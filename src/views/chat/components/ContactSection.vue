@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         toNewFriend() {
-            this.$router.push({path: '/newFriend'})
+            this.$router.push({path: '/chat/newFriend'})
         },
         toFriendCard(friendName) {
             this.$router.push({path: '/friendCard', query: {friendName}})

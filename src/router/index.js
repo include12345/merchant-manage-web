@@ -93,6 +93,16 @@ export const constantRouterMap = [
       name: 'chat-index',
       component: () => import('@/views/chat/index'),
       meta: {title: '聊天工具', icon: 'product-list'},
+    },{
+      path: 'newFriend',
+      name: 'newFriend',
+      component: () => import('@/views/chat/components/NewFriend'),
+      hidden: true
+    },{
+      path: 'search',
+      name: 'search',
+      component: () => import('@/views/chat/components/Search'),
+      hidden: true
     }]
   },
   // {
