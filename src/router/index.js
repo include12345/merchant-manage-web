@@ -103,6 +103,19 @@ export const constantRouterMap = [
       name: 'search',
       component: () => import('@/views/chat/components/Search'),
       hidden: true
+    },{
+      path: 'friendCard',
+      name: 'friendCard',
+      component: () => import('@/views/chat/components/FriendCard'),
+      props: (route) => ({
+        friendName: route.query.friendName
+      }),
+      hidden: true
+    },{
+      path: 'messageSection',
+      name: 'messageSection',
+      component: () => import('@/views/chat/components/MessageSection'),
+      hidden: true
     }]
   },
   // {

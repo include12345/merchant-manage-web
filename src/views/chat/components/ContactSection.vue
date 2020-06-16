@@ -11,7 +11,7 @@
                 <mt-index-section class="contact" :index="contact.remark">
                     <template v-for="friendInfo in contact.friendsInfo">
                         <mt-cell :title="friendInfo.username"
-                        @click.native="toFriendCard(friendInfo.friendName)">
+                        @click.native="toFriendCard(friendInfo.username)">
                         </mt-cell>
                     </template>
                 </mt-index-section>
@@ -40,7 +40,7 @@ export default {
             this.$router.push({path: '/chat/newFriend'})
         },
         toFriendCard(friendName) {
-            this.$router.push({path: '/friendCard', query: {friendName}})
+            this.$router.push({path: '/chat/friendCard', query: {friendName}})
         }
     },
     beforeCreate: function() {

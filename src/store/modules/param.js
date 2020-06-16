@@ -4,7 +4,7 @@ import ws from  '@/api/ws'
 const param = {
     state: {
         consumer: {},
-        sessions: {},
+        sessions: {username: "test"},
         messages:{},
         unreadReqCount: 0,
         unreadMsgCount: 0,
@@ -31,6 +31,7 @@ const param = {
         SWITCH_SESSION: (state, {from, remark}) => {
             setCurrentSession(state, from, remark)
         },
+        
         RECEIVE_ALL: (state, {messages}) => {
             let latestMessage
             messages.forEach(message => {
@@ -155,6 +156,7 @@ const param = {
             // })
         },
         setRemark({commit}, payload){
+            
             return new Promise((resolve, reject) => {
               api.setRemark(payload, (res) => {
                 if (res) {
@@ -200,17 +202,18 @@ function addMessage(state, message) {
 }
 
 function setCurrentSession(state, from, remark) {
+    console.log("state:" + JSON.stringify(state) + "from:" + JSON.stringify(from))
     state.currentFrom = from
     if (!state.sessions[from]) {
       createSession(state, from, remark)
     }
     // mark session as read
     if (state.sessions[from].lastMessage) {
-      state.sessions[from].lastMessage.isRead = true
+        state.sessions[from].lastMessage.isRead = true
     }
     state.unreadMsgCount -= state.sessions[from].unreadMsgCount
     if (state.sessions[from].unreadMsgCount > 0) {
-        ws.remarkHasRead(from)
+        // ws.remarkHasRead(from)
     }
   
     state.sessions[from].unreadMsgCount = 0
