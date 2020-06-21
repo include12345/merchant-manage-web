@@ -304,4 +304,53 @@ export function fileUpload(formData) {
 }
 
 
+//friend
+export function listFriends() {
+  return request({
+    url: '/friend/listFriends',
+    method: 'get',
+    headers:{
+      "token": "getToken().token"
+    }
+  })
+}
+
+
+export function listFriendReq() {
+  return request({
+    url: '/friend/listFriendReq',
+    method: 'get',
+    headers:{
+      "token": "getToken().token"
+    }
+  })
+}
+
+
+export function searchFriend(friendName) {
+  return request({
+    url: '/friend/searchFriend',
+    method: 'get',
+    headers:{
+      "token": "getToken().token"
+    },
+    params: {
+      "friendName": friendName
+    }
+  })
+}
+
+
+export function addFriendRequest(friendName) {
+  return request({
+    url: '/friend/addFriendRequest',
+    method: 'post',
+    headers:{
+      "token": "getToken().token"
+    },
+    data: {
+      "friendName": friendName
+    }
+  })
+}
         

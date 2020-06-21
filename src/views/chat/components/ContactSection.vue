@@ -8,10 +8,10 @@
                 </mt-badge>
             </mt-cell>
             <template v-for="contact in contacts">
-                <mt-index-section class="contact" :index="contact.remark">
+                <mt-index-section class="contact" :index="contact.tag">
                     <template v-for="friendInfo in contact.friendsInfo">
-                        <mt-cell :title="friendInfo.username"
-                        @click.native="toFriendCard(friendInfo.username)">
+                        <mt-cell :title="friendInfo.friendname"
+                        @click.native="toFriendCard(friendInfo.friendname)">
                         </mt-cell>
                     </template>
                 </mt-index-section>
@@ -44,9 +44,10 @@ export default {
         }
     },
     beforeCreate: function() {
-    this.$nextTick(function() {
-      this.$store.dispatch("getContacts");
-    });
+        this.$nextTick(function() {
+            this.$store.dispatch("getContacts");
+            this.$store.dispatch("listFriendReq");
+        });
   }
 }
 </script>

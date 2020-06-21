@@ -92,6 +92,11 @@ export default {
       }
     }
   },
+  beforeCreate: function() {
+      this.$nextTick(function() {
+            this.$store.dispatch("subscribeMsg");
+      });
+  },
 
   created() {
     this.height = document.documentElement.clientHeight - 95;

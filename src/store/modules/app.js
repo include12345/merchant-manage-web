@@ -1,6 +1,4 @@
 import Cookies from 'js-cookie'
-import Vue from 'vue'
-import ws from  '@/api/ws'
 
 
 const app = {

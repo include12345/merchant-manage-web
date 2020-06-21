@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import ws from  '@/api/ws'
+import ws from  '@/utils/wsRequest'
+import { listFriends, listFriendReq } from '@/api/api'
+
 
 const param = {
     state: {
@@ -9,7 +11,7 @@ const param = {
         unreadReqCount: 0,
         unreadMsgCount: 0,
         contacts: [],
-        friendsInfo: {},
+        friends:[],
         requestContacts:[],
         nearbyPeoples: [],
         connected: false,
@@ -48,20 +50,34 @@ const param = {
         },
         GET_CONTACTS: (state, contacts) => {
             state.contacts = contacts
+            var friendList = []
+            contacts.forEach(contact => {
+                contact.friendsInfo.forEach(friendInfo => {
+                    friendList.push(friendInfo.friendname)
+                })
+            })
+            state.friends = friendList
+            console.log("state.friends:" + JSON.stringify(state.friends))
         },
-        CLEAR_FRIEND_INFO: (state) => {
-            state.friendsInfo = {}
+        GET_REQUEST_CONTACTS: (state, requestContacts) =>{
+            state.requestContacts = requestContacts
         },
         GET_FRIEND_INFO: (state, {friendName, friendInfo}) => {
             Vue.set(state.friendsInfo, friendName, friendInfo)
         },
-        SET_MASK: (state, {friendName, remark}) => {
-            let info = state.friendsInfo[friendName]
-            if (info) {
-              Vue.set(state.friendsInfo[friendName], 'remark', remark)
-            } else {
-              Vue.set(state.friendsInfo, friendName, {remark})
-            }
+        SET_REMARK: (state, {friendName, remark}) => {
+            var tag = friendName.substring(0, 1)
+            state.contacts.forEach(contact => {
+                if(contact.tag === tag) {
+                    contact.friendsInfo.forEach(friendInfo => {
+                        if(friendInfo.friendname === friendName) {
+                            friendInfo.remark === remark
+                        }
+                    })
+                }
+            })
+            commit('GET_CONTACTS', state.contacts)
+            
         }
     },
 
@@ -90,84 +106,34 @@ const param = {
             })
         },
         getContacts({commit}) {
-            var contacts = [
-                {
-                    remark: "T",
-                    friendsInfo: [{
-                        username: 'test',
-                    },{
-                        username: 'test2',
-                    },{
-                        username: 'test3',
-                    }]
-                },
-                {
-                    remark: "L",
-                    friendsInfo: [{
-                        username: 'test',
-                    },{
-                        username: 'test2',
-                    },{
-                        username: 'test3',
-                    }]
-                },{
-                    remark: "L1",
-                    friendsInfo: [{
-                        username: 'test',
-                    },{
-                        username: 'test2',
-                    },{
-                        username: 'test3',
-                    }]
-                },{
-                    remark: "L2",
-                    friendsInfo: [{
-                        username: 'test',
-                    },{
-                        username: 'test2',
-                    },{
-                        username: 'test3',
-                    }]
-                },{
-                    remark: "L3",
-                    friendsInfo: [{
-                        username: 'test',
-                    },{
-                        username: 'test2',
-                    },{
-                        username: 'test3',
-                    }]
-                }
-            ]
-            // api.getContacts(contacts => {
-                commit('GET_CONTACTS', contacts)
-                // commit('CLEAR_FRIEND_INFO')
-                // for (let index in contacts) {
-                //     let contact = contacts[index]
-                //     contact.forEach(c => {
-                //         if (c.friendsInfo) {
-                //             const friendName = c.friendsInfo.username
-                //             const friendInfo = c.friendInfo
-                //             friendInfo.remark = c.remark;
-                //             commit('GET_FRIEND_INFO', {friendName, friendInfo})
-                //         }
-                //     })
-                // }
-            // })
+            listFriends().then(response => {
+                    console.log(JSON.stringify(response))
+                    commit('GET_CONTACTS', response)
+                })
+        },
+
+        listFriendReq({commit}) {
+            listFriendReq().then(response => {
+                    console.log(JSON.stringify(response))
+                    commit('GET_REQUEST_CONTACTS', response)
+                })
         },
         setRemark({commit}, payload){
             
             return new Promise((resolve, reject) => {
               api.setRemark(payload, (res) => {
                 if (res) {
-                  commit('SET_MASK', payload)
+                  commit('SET_REMARK', payload)
                   resolve()
                 } else {
                   reject()
                 }
               })
             })
-          }
+        },
+        subscribeMsg({commit}) {
+            ws.subscribe() 
+        }
     }
 }
 

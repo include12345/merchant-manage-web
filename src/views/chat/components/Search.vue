@@ -1,49 +1,41 @@
 <template>
     <transition name="fade">
         <div class="search">
-            <mt-search ref="search"
-            :placeholder="searchText"
-            :cancel-text="cancelText"
-            :autofocus="true"
-            @click.native="handleClick"
-            v-model.trim="value"
-            @keyup.enter.native="onSearch">
-                <mt-cell v-if="value" :title="title" is-link @click.native="onSearch"></mt-cell>
+            <mt-search v-model="value"
+                cancel-text="取消"
+                placeholder="搜索"
+                @keyup.enter.native="onSearch">
             </mt-search>
-            <div v-if="friendInfo !== null">
-                <div class="line"></div>
-                <div class="user-info">
-                     <p>{{ friendInfo.friendName || friendInfo.username }}</p>
-                     <mt-button v-if="friendInfo.friendName" type="primary" :disabled="true" size="small" @click="addFriend">已添加</mt-button>
-                    <mt-button v-else type="primary" size="small" @click="addFriend">添加</mt-button>
-                </div>
+            <div v-for="friend in friendResult">
+                <mt-cell :title="friend.username">
+                    <mt-button v-if="checkFriendExisted(friend.username)" type="primary" :disabled="true" size="small">已添加</mt-button>
+                    <mt-button v-else type="primary" size="small" @click="addFriendRequest(friend.username)">添加</mt-button>
+                </mt-cell>
             </div>
-            <div class="no-data" v-if="hasSearch && friendInfo === null">
-                <div class="line"></div>
-                <p>用户不存在</p>
-            </div>
-            <mt-popup v-model="popupVisible" :closeOnClickModel="false" position="top" class="mint-popup-2">
-                <p>请求已发送</p>
-            </mt-popup>
         </div>
     </transition>
 </template>
 
 <script>
 import {MessageBox} from 'mint-ui'
-import {searchFriend, addFriend} from '@/api/api';
-
+import {searchFriend, addFriendRequest} from '@/api/api';
+import {mapGetters} from 'vuex'
 export default {
     name: 'search',
     data() {
         return {
             value: '',
-            friendInfo: null,
+            friendName: null,
             hasSearch: false,
-            popupVisible: false
+            popupVisible: false,
+            friendResult: []
+
         }
     },
     computed: {
+        ...mapGetters([
+            'friends'
+        ]),
         title() {
             return '搜索:' + this.value
         },
@@ -55,10 +47,19 @@ export default {
         }
     },
     watch: {
-        handleClick(e) {
-            if (e.target.tagName.toUpperCase() === "A") {
-            this.$router.go(-1)
+        value: function () {
+            this.friendResult = []
+            this.hasSearch = false
+        }
+    },
+    methods: {
+        checkFriendExisted(username) {
+            for(var i = 0; i < this.friends.length; i++){
+                if(username === this.friends[i]){
+                    return true;
+                }
             }
+            return false;
         },
         onSearch() {
             if (!this.value) {
@@ -76,7 +77,8 @@ export default {
                 return
             }
             searchFriend(this.value).then(response => {
-                 this.friendInfo = response.responseData
+                console.log(response)
+                 this.friendResult = response
                 this.hasSearch = true
             }).catch(error => {
                 MessageBox.close()
@@ -90,30 +92,15 @@ export default {
                 return
             });
         },
-        addFriend() {
-            addFriend(this.value).then(response => {
+        addFriendRequest(friendName) {
+            addFriendRequest(friendName).then(response => {
                 this.popupVisible = true
                 setTimeout(() => {
                 this.popupVisible = false
                 this.$router.go(-1)
                 }, 2000)
-            }).catch(error => {
-                MessageBox.close()
-                this.$nextTick(() => {
-                    MessageBox.alert(
-                        'error',
-                        '提示',
-                        {confirmButtonText: '确定'}
-                    )
-                })
-                return
             });
         }
-    },
-    mounted() {
-      this.$nextTick(() => {
-        this.$refs['search'].$refs['input'].click()
-      })
     }
 }
 </script>

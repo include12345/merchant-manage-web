@@ -16,9 +16,9 @@
             </div>
             <p class="line">好友请求</p>
              <template v-for="requestContact in requestContacts">
-                <mt-cell :title="requestContact.username">
-                    <mt-button size="small" type="primary" @click="dealReq(requestContact.username, 2)">接受</mt-button>
-                     <mt-button size="small" type="danger" @click="dealReq(requestContact.username, 3)" style="margin-left:10px;">接受</mt-button>
+                <mt-cell :title="requestContact.friendname">
+                    <mt-button size="small" type="primary" @click="dealReq(requestContact.friendname, 1)">接受</mt-button>
+                     <mt-button size="small" type="danger" @click="dealReq(requestContact.friendname, 2)" style="margin-left:10px;">拒绝</mt-button>
                 </mt-cell>
              </template>
         </div>
@@ -28,14 +28,15 @@
 
 <script>
 import Search from './Search'
-import {dealFriendReq, getRequestContacts} from '@/api/api';
+import {dealFriendReq} from '@/api/api';
+import {mapGetters} from 'vuex'
 export default {
     name: 'new-friend',
     components: {Search},
-    data() {
-        return {
-            requestContacts: []
-        }
+    computed: {
+      ...mapGetters([
+        'requestContacts'
+      ])
     },
     methods: {
         toSearch() {
@@ -62,27 +63,32 @@ export default {
             });
         }
     },
-    beforeCreate: function() {
-        this.$nextTick(function() {
-            this.requestContacts = [{
-                username: 'hahaha'
-            }]
-            // getRequestContacts().then(response => {
-            //     if (response.content) {
-            //         this.requestContacts = response.content;
-            //         //红点处理unreadReqCount
-            //         return;
-            //     }
-            // }).catch(error => {
-            //     this.$message({
-            //     message: "异常：" + error,
-            //     type: "warning",
-            //     duration: 1000
-            //     });
-            //     return;
-            // });
-        });
-    }
+//     beforeCreate: function() {
+//         this.$nextTick(function() {
+//             this.$store.dispatch("listFriendReq");
+//         });
+//   }
+    // beforeCreate: function() {
+    //     this.$nextTick(function() {
+    //         this.requestContacts = [{
+    //             username: 'hahaha'
+    //         }]
+    //         // getRequestContacts().then(response => {
+    //         //     if (response.content) {
+    //         //         this.requestContacts = response.content;
+    //         //         //红点处理unreadReqCount
+    //         //         return;
+    //         //     }
+    //         // }).catch(error => {
+    //         //     this.$message({
+    //         //     message: "异常：" + error,
+    //         //     type: "warning",
+    //         //     duration: 1000
+    //         //     });
+    //         //     return;
+    //         // });
+    //     });
+    // }
 }
 </script>
 <style lang="scss" scoped>
