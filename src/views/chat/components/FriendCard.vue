@@ -23,7 +23,7 @@
 <script>
     import {MessageBox, Toast, Indicator} from 'mint-ui'
     import {mapGetters} from 'vuex'
-    import {setFriendInfo} from '@/api/api';
+    import {setFriendInfo, deleteFriend} from '@/api/api';
     export default {
         name: 'friend-card',
         data() {
@@ -63,10 +63,23 @@
                 })
             },
             deleteFriend() {
-
+                this.$confirm('是否要删除好友:' + this.friendName, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteFriend(this.friendName).then(response=>{
+                        this.$message({
+                            type: 'success',
+                            message: '提交成功',
+                            duration:1000
+                        });
+                        this.$router.back();
+                    });
+                })
             },
             back() {
-            window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+                window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
             }
         }
     }

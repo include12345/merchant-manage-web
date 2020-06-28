@@ -61,6 +61,7 @@ const param = {
         },
         GET_REQUEST_CONTACTS: (state, requestContacts) =>{
             state.requestContacts = requestContacts
+            state.unreadReqCount = requestContacts.length;
         },
         GET_FRIEND_INFO: (state, {friendName, friendInfo}) => {
             Vue.set(state.friendsInfo, friendName, friendInfo)

@@ -340,7 +340,7 @@ export function searchFriend(friendName) {
   })
 }
 
-
+//添加好友请求
 export function addFriendRequest(friendName) {
   return request({
     url: '/friend/addFriendRequest',
@@ -350,6 +350,30 @@ export function addFriendRequest(friendName) {
     },
     data: {
       "friendName": friendName
+    }
+  })
+}
+//处理好友请求
+export function dealFriendReq(friendName, status) {
+  return request({
+    url: '/friend/dealFriendReq',
+    method: 'post',
+    headers:{
+      "token": "getToken().token"
+    },
+    data: {
+      "friendName": friendName,
+      "isAgree": status
+    }
+  })
+}
+//删除好友
+export function deleteFriend(friendName) {
+  return request({
+    url: '/friend/deleteFriend/'+ friendName,
+    method: 'delete',
+    headers:{
+      "token": "getToken().token"
     }
   })
 }

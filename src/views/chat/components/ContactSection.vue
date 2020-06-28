@@ -1,12 +1,12 @@
 <template>
     <div class="contact-session" ref="contactSection">
-        <mt-index-list :height="height">
-            <mt-cell class="mt-20 new-friend" title="新的朋友" @click.native="toNewFriend">
+        <mt-cell class="mt-20 new-friend" title="新的朋友" @click.native="toNewFriend">
                 <span slot="icon" class="new-friend-icon cell-icon icon icon-user-plus"></span>
                 <mt-badge size="small" color="red" v-show="unreadReqCount">
                     {{unreadReqCountFormat}}
                 </mt-badge>
             </mt-cell>
+        <mt-index-list :height="height">
             <template v-for="contact in contacts">
                 <mt-index-section class="contact" :index="contact.tag">
                     <template v-for="friendInfo in contact.friendsInfo">
