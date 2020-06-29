@@ -30,7 +30,7 @@
             return {
                 friendRemark: '',
                 region: 'hahahah',
-                remark: '',
+                remark: null,
                 imgUrl:''
             }
         },
@@ -41,23 +41,17 @@
             }
         },
        
-        computed: {
-            // nickname() {
-            //     return this.friendName
-            // },
-        },
         methods: {
             setRemark() {
                 return this.remark
                 //todo
             },
-            setRegion() {
-                return "this.remark"
-                //todo
-            },
             switchSession() {
                 let from = this.friendName
                 let remark = this.remark
+                if (!this.remark) {
+                    remark = this.friendName
+                }
                 this.$store.dispatch('switchSession', {from, remark}).then(() => {
                     this.$router.push({path: '/chat/messageSection'})
                 })

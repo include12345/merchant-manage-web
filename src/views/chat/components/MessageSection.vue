@@ -148,8 +148,8 @@
       min-height: 48px;
       position: fixed;
       bottom: 0;
-      left: 0;
-      background-color: #eee;
+    //   left:0;
+    //   right: 0;
       .btn-mic {
         width: 30px;
         height: 30px;

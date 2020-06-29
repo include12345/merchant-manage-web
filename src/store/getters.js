@@ -22,15 +22,8 @@ const getters = {
     currentFrom: state => state.param.currentFrom,
     messages: state => state.param.messages,
     gender: state => state.gender === null ? null : parseInt(state.gender),
-    currentSession: () => {
-        return currentFrom
-        ? sessions[currentFrom] : {}
-    },
-    currentMessages: state => {
-        const session = currentSession(state)
-        return session.messages
-        ? session.messages.map(id => messages[id]) : []
-    }
+    currentSession: state => state.param.currentSession,
+    currentMessages: state => state.param.currentMessages,
 }
 
 export default getters

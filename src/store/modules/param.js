@@ -7,6 +7,8 @@ const param = {
     state: {
         consumer: {},
         sessions: {username: "test"},
+        currentSession: {},
+        currentMessages: [],
         messages:{},
         unreadReqCount: 0,
         unreadMsgCount: 0,
@@ -31,7 +33,32 @@ const param = {
             state.active = active
         },
         SWITCH_SESSION: (state, {from, remark}) => {
-            setCurrentSession(state, from, remark)
+            console.log("state:" + JSON.stringify(state) + "from:" + JSON.stringify(from))
+            state.currentFrom = from
+            if (!state.sessions[from]) {
+                Vue.set(state.sessions, from, {
+                    from,
+                    remark, 
+                    messages: [],
+                    lastMessage: null,
+                    unreadReqCount: 0
+                })
+            }
+            state.currentSession = state.sessions[state.currentFrom]
+            // mark session as read
+            if (state.sessions[from].lastMessage) {
+                state.sessions[from].lastMessage.isRead = true
+            }
+            state.unreadMsgCount -= state.sessions[from].unreadMsgCount
+            if (state.sessions[from].unreadMsgCount > 0) {
+                ws.remarkHasRead(from)
+            }
+  
+            state.sessions[from].unreadMsgCount = 0
+        },
+
+        CLEAR_SESSION: (state) => {
+            state.currentFrom = null
         },
         
         RECEIVE_ALL: (state, {messages}) => {
@@ -91,6 +118,9 @@ const param = {
         },
         switchSession({commit}, payload) {
             commit('SWITCH_SESSION', payload)
+        },
+        clearSession({commit}){
+            commit('CLEAR_SESSION')
         },
         getUnReadMessages({commit}){
             return new Promise((resolve) => {
@@ -167,23 +197,5 @@ function addMessage(state, message) {
     }
     state.param.sessions[from].unreadReqCount = 0
 }
-
-function setCurrentSession(state, from, remark) {
-    console.log("state:" + JSON.stringify(state) + "from:" + JSON.stringify(from))
-    state.currentFrom = from
-    if (!state.sessions[from]) {
-      createSession(state, from, remark)
-    }
-    // mark session as read
-    if (state.sessions[from].lastMessage) {
-        state.sessions[from].lastMessage.isRead = true
-    }
-    state.unreadMsgCount -= state.sessions[from].unreadMsgCount
-    if (state.sessions[from].unreadMsgCount > 0) {
-        // ws.remarkHasRead(from)
-    }
-  
-    state.sessions[from].unreadMsgCount = 0
-  }
 
 export default param
