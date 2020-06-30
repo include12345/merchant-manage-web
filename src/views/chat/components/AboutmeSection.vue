@@ -41,7 +41,7 @@ export default {
 <style lang="scss">
     .aboutme-section {
         .me {
-            height: 70px;
+            // height: 70px;
             .mint-cell-wrapper {
                 height: 100%;
                 position: relative;

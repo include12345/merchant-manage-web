@@ -1,7 +1,8 @@
 <template>
+<div class="app-container">
     <transition name="fade">
         <div class="message">
-            <mt-header fixed :title="session.remark || session.from">
+            <mt-header :title="session.remark || session.from">
                 <a href="javascript:;" slot="left" @click="back">
                     <mt-button icon="back">返回</mt-button>
                 </a>
@@ -24,7 +25,9 @@
                 <mt-button class="btn-send" type="primary" size="small" @click="sendMessage">发送</mt-button>
             </div>
         </div>
+    
     </transition>
+</div>
 </template>
 
 <script>
@@ -144,11 +147,12 @@
         -moz-background-size: 100% 100%;
     }
     .message-foot {
-      width: 100%;
+      width: 90%;
       min-height: 48px;
       position: fixed;
       bottom: 0;
-    //   left:0;
+    //   left: 180px;
+    
     //   right: 0;
       .btn-mic {
         width: 30px;
@@ -167,12 +171,12 @@
       }
       .btn-send {
         position: absolute;
-        right: 8px;
+        right: 180px;
         top: 8px;
         width: 60px;
       }
       .msg {
-        width: calc(100% - 130px);
+        width: calc(100% - 330px);
         height: 30px;
         position: absolute;
         top: 9px;

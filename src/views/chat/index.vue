@@ -3,7 +3,7 @@
     <div>
       <transition name="fade">
         <div class="c-index">
-          <mt-header fixed :title="title"></mt-header>
+          <mt-header :title="title"></mt-header>
           <div class="content" ref="content">
             <mt-tab-container v-model="active">
               <mt-tab-container-item id="message">
@@ -17,7 +17,7 @@
               </mt-tab-container-item>
             </mt-tab-container>
           </div>
-          <mt-tabbar fixed v-model="active">
+          <mt-tabbar v-model="active">
             <mt-tab-item id="message">
               <mt-badge size="small" color="red" v-show="unreadMsgCount">
                 {{ unreadMsgCountMothod }}
@@ -36,6 +36,7 @@
               <i slot="icon" class="icon icon-user"></i>
               {{ "我" }}
             </mt-tab-item>
+            
           </mt-tabbar>
         </div>
       </transition>
@@ -99,7 +100,7 @@ export default {
   },
 
   created() {
-    this.height = document.documentElement.clientHeight - 95;
+    this.height = document.documentElement.clientHeight - 300;
   }
 };
 </script>
@@ -132,7 +133,7 @@ export default {
   .mint-tab-item-label {
     position: relative;
     .mini-badge {
-      position: absolute;
+      // position: absolute;
       top: -38px;
       right: 35px;
     }
@@ -144,10 +145,10 @@ export default {
   right: 0;
 //   left: 180px;
   margin-left: 180px;
-  position: fixed;
+  // position: fixed;
   z-index: 1;
 }
-.mint-tabbar.is-fixed {
-    margin-left: 180px;
-}
+// .mint-tabbar.is-fixed {
+//     margin-left: 180px;
+// }
 </style>

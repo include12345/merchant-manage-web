@@ -1,5 +1,4 @@
 <template>
-<div class="app-container">
     <transition name="fade">
         <div class="new-friend">
             <mt-header fixed :title="新的朋友">
@@ -25,7 +24,6 @@
             </div>
         </div>
     </transition>
-</div>
 </template>
 
 <script>
