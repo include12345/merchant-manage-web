@@ -106,15 +106,27 @@ export default {
 </script>
 
 <style lang="scss">
+.app-container{
+  padding: 0;
+  overflow: hidden;
+}
 .c-index {
+  position: relative;
+  display: flex;
+  flex-direction: column;
     // width: 100%;
     // height: 100%;
-    margin-top: 20px;
+    // margin-top: 20px;
+  height: calc(100vh - 50px);
   .content {
+    flex:1;
+    overflow-y: auto;
     width: 100%;
+    padding:0 20px;
+
     // top: 40px;
     // left: 0;
-    height: calc(100%-50px) !important;
+    
     background-color: bisque;
     .mint-tab-container {
       //   width: 100%;
@@ -133,7 +145,7 @@ export default {
   .mint-tab-item-label {
     position: relative;
     .mini-badge {
-      // position: absolute;
+      position: absolute;
       top: -38px;
       right: 35px;
     }
@@ -141,14 +153,17 @@ export default {
 }
 
 .mint-header.is-fixed {
-  top: 51px;
-  right: 0;
-//   left: 180px;
-  margin-left: 180px;
-  // position: fixed;
-  z-index: 1;
+//   top: 51px;
+//   right: 0;
+// //   left: 180px;
+//   margin-left: 180px;
+//   // position: fixed;
+//   z-index: 1;
 }
-// .mint-tabbar.is-fixed {
-//     margin-left: 180px;
-// }
+.mint-tabbar.is-fixed {
+    // margin-left: 180px;
+}
+.mint-tabbar{
+  position: relative;
+}
 </style>

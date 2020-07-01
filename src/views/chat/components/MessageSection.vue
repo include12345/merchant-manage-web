@@ -128,12 +128,15 @@
 <style lang="scss">
 .message {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
     .message-section {
-        position: fixed;
+        overflow-y: auto;
+        flex: 1;
         top:40px;
-        height: calc(100% -89px);
-        max-height: calc(100% -89px);
+        // height: calc(100% -89px);
+        // max-height: calc(100% -89px);
         width:100%;
         .message-list {
             height: calc(100% - 20px);
@@ -147,11 +150,13 @@
         -moz-background-size: 100% 100%;
     }
     .message-foot {
-      width: 90%;
+      width: 100%;
       min-height: 48px;
-      position: fixed;
+    //   position: fixed;
       bottom: 0;
-    //   left: 180px;
+    //   left:0;
+    //   right: 0;
+      display: flex;
     
     //   right: 0;
       .btn-mic {
@@ -164,22 +169,28 @@
         display: inline-block;
         text-align: center;
         line-height: 30px;
-        margin: 8px;
+        margin: 0 8px;
         i {
           margin: 0;
         }
       }
+      .mint-button--small {
+        height: 30px;
+      }
       .btn-send {
-        position: absolute;
-        right: 180px;
-        top: 8px;
+        // .mint-button--small {
+        //     height: 30px !important;
+        // }
+        // position: absolute;
+        margin-left: 8px;
+        // top: 9px;
         width: 60px;
       }
       .msg {
-        width: calc(100% - 330px);
+        width: calc(100% - 140px);
         height: 30px;
-        position: absolute;
-        top: 9px;
+        // position: absolute;
+        top: 8px;
         left: 50px;
         outline: none;
         border: 1px solid;
