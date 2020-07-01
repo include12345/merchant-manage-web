@@ -3,7 +3,7 @@
     <div>
       <transition name="fade">
         <div class="c-index">
-          <mt-header fixed :title="title"></mt-header>
+          <mt-header :title="title"></mt-header>
           <div class="content" ref="content">
             <mt-tab-container v-model="active">
               <mt-tab-container-item id="message">
@@ -17,7 +17,7 @@
               </mt-tab-container-item>
             </mt-tab-container>
           </div>
-          <mt-tabbar fixed v-model="active">
+          <mt-tabbar v-model="active">
             <mt-tab-item id="message">
               <mt-badge size="small" color="red" v-show="unreadMsgCount">
                 {{ unreadMsgCountMothod }}
@@ -98,22 +98,34 @@ export default {
       });
   },
 
-  created() {
-    this.height = document.documentElement.clientHeight - 95;
-  }
+  // created() {
+  //   this.height = document.documentElement.clientHeight - 95;
+  // }
 };
 </script>
 
 <style lang="scss">
+.app-container{
+  padding: 0;
+  overflow: hidden;
+}
 .c-index {
+  position: relative;
+  display: flex;
+  flex-direction: column;
     // width: 100%;
     // height: 100%;
-    margin-top: 20px;
+    // margin-top: 20px;
+    height: calc(100vh - 50px);
   .content {
+    flex:1;
+    overflow-y: auto;
     width: 100%;
+    padding:0 20px;
+
     // top: 40px;
     // left: 0;
-    height: calc(100%-50px) !important;
+    
     background-color: bisque;
     .mint-tab-container {
       //   width: 100%;
@@ -140,14 +152,20 @@ export default {
 }
 
 .mint-header.is-fixed {
-  top: 51px;
-  right: 0;
-//   left: 180px;
-  margin-left: 180px;
-  position: fixed;
-  z-index: 1;
+  // top: 51px;
+  // right: 0;
+  // left: 180px;
+  // margin-left: 180px;
+  // position: fixed;
+  // z-index: 1;
+  // position: absolute;
 }
 .mint-tabbar.is-fixed {
-    margin-left: 180px;
+    // margin-left: 180px;
+    // position: absolute;
+    // bottom:0;
+}
+.mint-tabbar{
+  position: relative;
 }
 </style>

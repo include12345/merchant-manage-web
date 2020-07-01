@@ -3,13 +3,13 @@
         <mt-cell class="mt-20 me" is-link to="/profile" :title="realName" :label="'chat ID:' +username">
 
         </mt-cell>
-        <mt-cell class="mt-20" is-link :title="朋友圈" @click.native="comingSoon">
+        <mt-cell class="mt-20" is-link title="朋友圈" @click.native="comingSoon">
             <span slot="icon" class="cell-icon moments icon icon-camera"></span>
         </mt-cell>
-        <mt-cell is-link :title="附近朋友" to="/NearbyPeople">
+        <mt-cell is-link title="附近朋友" to="/NearbyPeople">
             <span slot="icon" class="cell-icon near-by icon icon-man-woman"></span>
         </mt-cell>
-        <mt-cell class="mt-30" is-link to="/settings" :title="设置">
+        <mt-cell class="mt-30" is-link to="/settings" title="设置">
             <span slot="icon" class="cell-icon settings icon icon-cog"></span>
         </mt-cell>
     </div>

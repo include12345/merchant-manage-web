@@ -1,11 +1,11 @@
 <template>
     <transition name="fade">
         <div class="message">
-            <mt-header fixed :title="session.remark || session.from">
+            <!-- <mt-header fixed :title="session.remark || session.from">
                 <a href="javascript:;" slot="left" @click="back">
                     <mt-button icon="back">返回</mt-button>
                 </a>
-            </mt-header>
+            </mt-header> -->
             <div class="message-section">
                 <ul class="message-list" ref="list">
                     <message 
@@ -115,22 +115,26 @@
             }
             
         },
-        mounted() {
-            if(!this.session || Object.keys(this.session).length === 0) {
-                this.$router.push('/')
-            }
-        }
+        // mounted() {
+        //     if(!this.session || Object.keys(this.session).length === 0) {
+        //         this.$router.push('/')
+        //     }
+        // }
     }
 </script>
 <style lang="scss">
 .message {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
     .message-section {
-        position: fixed;
+        // position: fixed;
+        overflow-y: auto;
+        flex: 1;
         top:40px;
-        height: calc(100% -89px);
-        max-height: calc(100% -89px);
+        // height: calc(100% -89px);
+        // max-height: calc(100% -89px);
         width:100%;
         .message-list {
             height: calc(100% - 20px);
@@ -146,10 +150,11 @@
     .message-foot {
       width: 100%;
       min-height: 48px;
-      position: fixed;
+    //   position: fixed;
       bottom: 0;
     //   left:0;
     //   right: 0;
+    display: flex;
       .btn-mic {
         width: 30px;
         height: 30px;
@@ -160,22 +165,25 @@
         display: inline-block;
         text-align: center;
         line-height: 30px;
-        margin: 8px;
+        margin: 0 8px;
         i {
           margin: 0;
         }
       }
       .btn-send {
-        position: absolute;
-        right: 8px;
-        top: 8px;
+          .mint-button--small {
+            height: 30px;
+        }
+        // position: absolute;
+       margin-left: 8px;
+        // top: 9px;
         width: 60px;
       }
       .msg {
         width: calc(100% - 130px);
         height: 30px;
-        position: absolute;
-        top: 9px;
+        // position: absolute;
+        top: 8px;
         left: 50px;
         outline: none;
         border: 1px solid;
