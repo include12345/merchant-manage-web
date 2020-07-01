@@ -151,14 +151,16 @@
         -moz-background-size: 100% 100%;
     }
     .message-foot {
-      width: 90%;
+    //   width: 90%;
+      padding: 0 10px;
       min-height: 48px;
+      display: flex;
+      align-items: center;
     //   position: fixed;
       bottom: 0;
     //   left: 180px;
     
     //   right: 0;
-    display: flex;
       .btn-mic {
         width: 30px;
         height: 30px;
@@ -174,17 +176,16 @@
           margin: 0;
         }
       }
-      .btn-send {
-          .mint-button--small {
-            height: 30px;
-        }
+      .btn-send.mint-button--small {         
+        height: 30px;
         // position: absolute;
        margin-left: 8px;
         // top: 9px;
         width: 60px;
       }
       .msg {
-        width: calc(100% - 330px);
+        // width: calc(100% - 330px);
+        flex: 1;
         height: 30px;
         // position: absolute;
         top: 8px;
