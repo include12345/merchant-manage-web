@@ -36,6 +36,7 @@
               <i slot="icon" class="icon icon-user"></i>
               {{ "我" }}
             </mt-tab-item>
+            
           </mt-tabbar>
         </div>
       </transition>
@@ -144,7 +145,7 @@ export default {
   .mint-tab-item-label {
     position: relative;
     .mini-badge {
-      position: absolute;
+      // position: absolute;
       top: -38px;
       right: 35px;
     }

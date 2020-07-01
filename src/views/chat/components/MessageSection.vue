@@ -1,4 +1,5 @@
 <template>
+<div class="app-container">
     <transition name="fade">
         <div class="message">
             <!-- <mt-header fixed :title="session.remark || session.from">
@@ -24,7 +25,9 @@
                 <mt-button class="btn-send" type="primary" size="small" @click="sendMessage">发送</mt-button>
             </div>
         </div>
+    
     </transition>
+</div>
 </template>
 
 <script>
@@ -148,11 +151,12 @@
         -moz-background-size: 100% 100%;
     }
     .message-foot {
-      width: 100%;
+      width: 90%;
       min-height: 48px;
     //   position: fixed;
       bottom: 0;
-    //   left:0;
+    //   left: 180px;
+    
     //   right: 0;
     display: flex;
       .btn-mic {
@@ -180,7 +184,7 @@
         width: 60px;
       }
       .msg {
-        width: calc(100% - 130px);
+        width: calc(100% - 330px);
         height: 30px;
         // position: absolute;
         top: 8px;
