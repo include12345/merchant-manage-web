@@ -1,7 +1,7 @@
 <template>
     <div class="contact-session" ref="contactSection">
         
-        <mt-index-list :height="height">
+        <mt-index-list>
             <mt-cell class="mt-20 new-friend" title="新的朋友" @click.native="toNewFriend">
                 <span slot="icon" class="new-friend-icon cell-icon icon icon-user-plus"></span>
                 <mt-badge size="small" color="red" v-show="unreadReqCount">
@@ -9,13 +9,16 @@
                 </mt-badge>
             </mt-cell>
             <template v-for="contact in contacts">
-                <mt-index-section class="contact" :index="contact.tag">
+                 <mt-cell :title="contact.friendname"
+                        @click.native="toFriendCard(contact.friendname)">
+                 </mt-cell>
+                <!-- <mt-index-section class="contact" :index="contact.tag">
                     <template v-for="friendInfo in contact.friendsInfo">
                         <mt-cell :title="friendInfo.friendname"
                         @click.native="toFriendCard(friendInfo.friendname)">
                         </mt-cell>
                     </template>
-                </mt-index-section>
+                </mt-index-section> -->
             </template>
         </mt-index-list>
     </div>
@@ -44,12 +47,11 @@ export default {
             this.$router.push({path: '/chat/friendCard', query: {friendName}})
         }
     },
-    beforeCreate: function() {
-        this.$nextTick(function() {
-            this.$store.dispatch("getContacts");
-            this.$store.dispatch("listFriendReq");
-        });
-  }
+//     beforeCreate: function() {
+//         this.$nextTick(function() {
+//             this.$store.dispatch("getContacts");
+//         });
+//   }
 }
 </script>
 <style lang="scss">

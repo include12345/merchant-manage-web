@@ -1,5 +1,5 @@
 <template>
-    <div class="session-section" :style="{'height': height + 'px'}">
+    <div class="session-section">
         <mt-loadmore class="load-more" :top-method="loadUnread" @top-status-change="handleTopChange" ref="loadMore">
             <load-more-top slot="top" :topStatus="topStatus"></load-more-top>
             <ul class="session-list" :style="{'min-height':height+'px'}">
@@ -17,7 +17,7 @@
                     v-if="session.lastMessage"
                     :key="session.from"
                     :session="session"
-                    :active="session.from === currentSession.from"
+                    :active="true"
                     @switch-session="switchSession">
                 </session>
             </ul>
@@ -25,14 +25,14 @@
     </div>
 </template>
 <script>
-import Session from './Session'
+import Session from './Session.vue'
 import {mapGetters} from 'vuex'
 import LoadMoreTop from './LoadMoreTop'
 export default {
     name: 'SessionSection',
     data() {
         return {
-            topStatus: ''
+            topStatus: '',
         }
     },
     props: {
@@ -45,7 +45,6 @@ export default {
     computed: {
         ...mapGetters([
             'sessions',
-            'currentSession',
             'lostConnect'
         ]),
         showNoMsg() {
@@ -71,26 +70,7 @@ export default {
                 this.topStatus = status
             },
             loadUnread() {
-                console.log("1")
-                const start = Date.now()
-                this.$store.dispatch('getUnReadMessages').then(
-                    (res) => {
-                        const costTime = Date.now() - start
-                        if(costTime < 2000) {
-                            setTimeout(() => {
-                                this.topStatus = res ? 'loaded' : 'loadErr'
-                                setTimeout(() => {
-                                    this.$refs['loadMore'].onTopLoaded()
-                                }, 500)
-                            }, 2000 - costTime)
-                            return
-                        }
-                        this.topStatus = res ? 'loaded' : 'loadErr'
-                        setTimeout(() => {
-                            this.$refs['loadMore'].onTopLoaded()
-                        }, 500)
-                    }
-                )
+                this.$store.dispatch('getUnReadMessages')
             }
     }
 }

@@ -3,6 +3,7 @@ import Stomp from 'stompjs'
 import {MessageBox} from "element-ui";
 import {getToken} from '@/utils/auth'
 import store from '../store'
+import {listFriendReq } from '@/api/api'
 
 let ws = {
   webSocket: null,
@@ -23,40 +24,28 @@ let ws = {
       }
   },
 
-  subscribe() {
+  subscribe(username) {
       let sockJs = new SockJS(process.env.BASE_API +'/websocketchat')
       this.webSocket = Stomp.over(sockJs)
       const headers = {}
       headers['token'] = 'getToken().token'
       let vm = this
       this.webSocket.connect(headers, function() {
-        vm.connectCallback()
+        vm.connectCallback(username)
       }, function() {
-        vm.errorCallback()
+        vm.errorCallback(username)
       })
   },
 
-  connectCallback() {
-      // store.commit('SET_CONNECTED', true)
-      // this.webSocket.subscribe('/user/' + getToken().username + '/chat', function(response) {
-      //     if(response.body && response.body.data) {
-      //         let message = JSON.parse(res.body.data)
-      //         onMessage(message)
-      //     } else {
-      //         errorCallback()
-      //     }
-      // })
-      // resendAllMsg()
+  connectCallback(username) {
       let vm = this
-      vm.webSocket.subscribe('/user/test/chat', function(response) {
-          console.log("response:" +JSON.stringify(response))
-          this.$store.dispatch("listFriendReq");
-          // if(response.body && response.body.data) {
-          //     let message = JSON.parse(res.body.data)
-          //     onMessage(message)
-          // } else {
-          //     errorCallback()
-          // }
+      vm.webSocket.subscribe('/user/'+username+'/chat', function(response) {
+          console.log("response:" +JSON.stringify(response.body))
+          if(response.body != null) {
+            vm.onMessage(JSON.parse(response.body))
+          } else {
+            vm.errorCallback()
+          }
       })
   },
 
@@ -106,27 +95,37 @@ let ws = {
   },
 
   onMessage(message) {
-      let type = message.MessageTypeEnum
-      switch(type) {
+    console.log("message:" +JSON.stringify(message))
+    // requestContact = JSON.parse(message)
+
+      if (message.type == null) {
+        this.errorCallback(message)
+      }
+      switch(message.type) {
           case 'DELETE_FRIEND':
-              store.commit('DELETE_FRIEND', message)
+              // store.commit('DELETE_FRIEND', message)
               return
           case 'ADD_FRIEND':
-              store.commit('ADD_REQ_CONTACT', message.from)
-              return
+            var requestContacts = []
+            var requestContact = JSON.parse(message.message)
+            requestContacts.push(requestContact)
+            store.commit('GET_REQUEST_CONTACTS', requestContacts)
+            return
           case 'MEDIA':
-              store.dispatch('onMessage', {message})
+              // store.dispatch('onMessage', {message})
               return
           case 'SMS':
-              store.dispatch('onMessage', {message})
+              // store.dispatch('onMessage', {message})
               return
           case 'PUSH_OUT':
-              this.onPushOut()
+              // this.onPushOut()
               return
           case 'DEAL_ADD_FRIEND_REQ':
-              return
+            store.commit('DEAL_ADD_FRIEND_REQ', message)
+            return
           case 'ACCEPTED_FRIEND_REQ':
-              store.commit('ACCEPTED_FRIEND_REQ', message)
+           
+              // store.commit('ACCEPTED_FRIEND_REQ', message)
               return
           default:
               this.errorCallback(message)

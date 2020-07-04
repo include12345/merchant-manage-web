@@ -327,6 +327,19 @@ export function listFriendReq() {
 }
 
 
+export function listUnReadMessages() {
+  return request({
+    url: '/record/listUnReadMessages',
+    method: 'get',
+    headers:{
+      "token": "getToken().token"
+    }
+  })
+}
+
+
+
+
 export function searchFriend(friendName) {
   return request({
     url: '/friend/searchFriend',

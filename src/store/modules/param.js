@@ -1,19 +1,19 @@
 import Vue from 'vue'
 import ws from  '@/utils/wsRequest'
-import { listFriends, listFriendReq } from '@/api/api'
+import { listFriends, listFriendReq, listUnReadMessages } from '@/api/api'
 
 
 const param = {
     state: {
+
         consumer: {},
-        sessions: {username: "test"},
+        sessions: [],
         currentSession: {},
         currentMessages: [],
         messages:{},
         unreadReqCount: 0,
         unreadMsgCount: 0,
         contacts: [],
-        friends:[],
         requestContacts:[],
         nearbyPeoples: [],
         connected: false,
@@ -61,34 +61,55 @@ const param = {
             state.currentFrom = null
         },
         
-        RECEIVE_ALL: (state, {messages}) => {
-            let latestMessage
-            messages.forEach(message => {
-                if(!state.param.sessions[message.from]) {
-                    createSession(state, message.from)
+        GET_UNREAD_MESSAGES: (state, unReadMessagesMap) => {
+            state.sessions = []
+            console.log("unReadMessagesMap:" + JSON.stringify(unReadMessagesMap))
+            for(var from in unReadMessagesMap) {
+                state.unreadMsgCount = state.unreadMsgCount + unReadMessagesMap[from].length
+                var contact = null
+                for (var i = 0; i < state.contacts.length; i++) {
+                    if(state.contacts[i].friendname == from) {
+                        contact = state.contacts[i]
+                    }
                 }
-
-                if(!latestMessage || message.timestamp > latestMessage.timestamp) {
-                    latestMessage = message
+                var imageUrl = null
+                var remark = null
+                if(contact) {
+                    imageUrl = contact.imageUrl
+                    remark = contact.remark
                 }
-
-                addMessage(state, message)
-            })
+                var session = {
+                    from: from,
+                    imageUrl: imageUrl,
+                    remark: remark,
+                    messages: unReadMessagesMap[from],
+                    lastMessage: unReadMessagesMap[from][0],
+                    unreadMsgCount: unReadMessagesMap[from].length
+                }
+                state.sessions.push(session)
+            }
         },
         GET_CONTACTS: (state, contacts) => {
             state.contacts = contacts
-            var friendList = []
-            contacts.forEach(contact => {
-                contact.friendsInfo.forEach(friendInfo => {
-                    friendList.push(friendInfo.friendname)
-                })
-            })
-            state.friends = friendList
-            console.log("state.friends:" + JSON.stringify(state.friends))
         },
         GET_REQUEST_CONTACTS: (state, requestContacts) =>{
-            state.requestContacts = requestContacts
-            state.unreadReqCount = requestContacts.length;
+            if(state.requestContacts.length > 0) {
+                for (var i = 0; i < state.requestContacts.length; i++) {
+                    for (var j = 0; j < requestContacts.length; j++) {
+                        if(requestContacts[i].friendname == state.requestContacts[j].friendname) {
+                            requestContacts.splice(j, 1)
+                        }
+                    }
+                }
+                state.requestContacts = state.requestContacts.concat(requestContacts)
+                state.unreadReqCount = state.requestContacts.length
+            } else {
+                state.requestContacts = requestContacts
+                state.unreadReqCount = requestContacts.length
+            }
+            
+            
+            
         },
         GET_FRIEND_INFO: (state, {friendName, friendInfo}) => {
             Vue.set(state.friendsInfo, friendName, friendInfo)
@@ -123,17 +144,8 @@ const param = {
             commit('CLEAR_SESSION')
         },
         getUnReadMessages({commit}){
-            return new Promise((resolve) => {
-              api.getUnReadMessages(messages => {
-                if (messages === -1) {
-                  resolve(false)
-                } else {
-                  if (messages && messages.length > 0) {
-                    commit('RECEIVE_ALL', {messages})
-                  }
-                  resolve(true)
-                }
-              })
+            listUnReadMessages().then(response => {
+                commit('GET_UNREAD_MESSAGES', response)
             })
         },
         getContacts({commit}) {
@@ -145,12 +157,10 @@ const param = {
 
         listFriendReq({commit}) {
             listFriendReq().then(response => {
-                    console.log(JSON.stringify(response))
                     commit('GET_REQUEST_CONTACTS', response)
                 })
         },
         setRemark({commit}, payload){
-            
             return new Promise((resolve, reject) => {
               api.setRemark(payload, (res) => {
                 if (res) {
@@ -163,7 +173,7 @@ const param = {
             })
         },
         subscribeMsg({commit}) {
-            ws.subscribe() 
+            ws.subscribe('test') 
         }
     }
 }

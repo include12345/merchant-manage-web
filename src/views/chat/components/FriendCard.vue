@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div class="friend-card">
-            <mt-header fixed title="好友详情">
+            <mt-header title="好友详情">
                 <mt-button icon="back" slot="left" @click="back">联系人</mt-button>
             </mt-header>
             <div style="width: 100%;height:40px;"></div>

@@ -2,11 +2,12 @@
     <div class="wc-session" @click="$emit('switch-session', session.from)">
         <mt-cell 
         :title="session.remark || session.from"
-        :label="session.lastMessage.duration ? '[语音]' : session.lastMessage.content"
+        :label="session.lastMessage.content"
         >
-
+            
+        
         </mt-cell>
-        <span class="time">{{ session.lastMessage.timestamp | time}}</span>
+        <span class="time">{{ getTime(session.lastMessage.ctime)}}</span>
         <mt-badge size="small" color="red" v-show="session.unreadMsgCount">
             {{session.unreadMsgCount > 99 ? '99+' : session.unreadMsgCount}}
         </mt-badge>
@@ -15,6 +16,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import {dateFormatNoTable} from '@/utils/timeFormat'
 export default {
     name: 'Session',
     props: {
@@ -26,7 +28,13 @@ export default {
             friendsInfo: 'friendsInfo'
         }),
 
+    },
+    methods: {
+        getTime(ctime) {
+            return dateFormatNoTable(ctime)
+        }
     }
+    
 }
 </script>
 <style lang="scss">
@@ -66,15 +74,15 @@ export default {
         }
         .time {
             position: absolute;
-            right: 10px;
-            top: 10px;
+            right: 40px;
+            top: 15px;
             font-size: 14px;
             color: #888;
         }
         .mint-badge {
             position: absolute;
-            top:2px;
-            left:45px;
+            top: 15px;
+            right: 2px
         }
     }
 </style>

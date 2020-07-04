@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div class="new-friend">
-            <mt-header fixed :title="新的朋友">
+            <mt-header :title="新的朋友">
                 <router-link to="/chat/index" slot="left">
                     <mt-button icon="back">返回</mt-button>
                 </router-link>
