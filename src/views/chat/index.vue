@@ -7,10 +7,10 @@
           <div class="content" ref="content">
             <mt-tab-container v-model="active">
               <mt-tab-container-item id="message">
-                <session-section :height="height"></session-section>
+                <session-section></session-section>
               </mt-tab-container-item>
               <mt-tab-container-item id="contact">
-                <contact-section :height="height"></contact-section>
+                <contact-section></contact-section>
               </mt-tab-container-item>
               <mt-tab-container-item id="aboutme">
                 <aboutme-section></aboutme-section>

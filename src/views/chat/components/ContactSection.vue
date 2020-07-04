@@ -36,9 +36,6 @@ export default {
             return this.unreadReqCount > 99 ? '99+' : this.unreadReqCount
         }
     },
-    props: {
-        height: Number
-    },
     methods: {
         toNewFriend() {
             this.$router.push({path: '/chat/newFriend'})

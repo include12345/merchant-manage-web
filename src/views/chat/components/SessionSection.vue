@@ -35,12 +35,6 @@ export default {
             topStatus: '',
         }
     },
-    props: {
-        height: {
-            type: Number,
-            default: 0
-        }
-    },
     components: {LoadMoreTop, Session},
     computed: {
         ...mapGetters([
