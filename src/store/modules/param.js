@@ -32,37 +32,45 @@ const param = {
         SET_ACTIVE: (state, active) => {
             state.active = active
         },
-        SWITCH_SESSION: (state, {from, remark}) => {
-            console.log("state:" + JSON.stringify(state) + "from:" + JSON.stringify(from))
-            state.currentFrom = from
-            if (!state.sessions[from]) {
-                Vue.set(state.sessions, from, {
-                    from,
-                    remark, 
-                    messages: [],
-                    lastMessage: null,
-                    unreadReqCount: 0
-                })
+        SWITCH_SESSION: (state, from) => {
+            console.log("state:" + JSON.stringify(state.sessions) + "from:" + from)
+            state.currentSession = {}
+            for (var i = 0; i < state.sessions.length; i++) {
+                if(state.sessions[i].from == from) {
+                    console.log("state.sessions[i]:" + JSON.stringify(state.sessions[i]))
+                    state.currentSession = state.sessions[i]
+                }
             }
-            state.currentSession = state.sessions[state.currentFrom]
-            // mark session as read
-            if (state.sessions[from].lastMessage) {
-                state.sessions[from].lastMessage.isRead = true
+            console.log("state.currentSession:" + JSON.stringify(state.currentSession))
+            if(state.currentSession.unreadMsgCount != null && state.currentSession.unreadMsgCount > 0 ) {
+                state.unreadMsgCount -= state.currentSession.unreadMsgCount
+                if (state.currentSession.unreadMsgCount > 0) {
+                    // ws.remarkHasRead(from)
+                }
+                state.currentSession.unreadMsgCount = 0
             }
-            state.unreadMsgCount -= state.sessions[from].unreadMsgCount
-            if (state.sessions[from].unreadMsgCount > 0) {
-                ws.remarkHasRead(from)
-            }
-  
-            state.sessions[from].unreadMsgCount = 0
+           
         },
 
         CLEAR_SESSION: (state) => {
             state.currentFrom = null
         },
+
+        ADD_SEND_MSG: (state, message) => {
+            if(state.currentSession != null && state.currentSession.messages != null) {
+                state.currentSession.messages.push(message)
+            } else {
+                state.currentSession = {
+                    from: message.to,
+                    messages: [message]
+                }
+            }
+            
+        },
         
         GET_UNREAD_MESSAGES: (state, unReadMessagesMap) => {
             state.sessions = []
+            state.unreadMsgCount = 0
             console.log("unReadMessagesMap:" + JSON.stringify(unReadMessagesMap))
             for(var from in unReadMessagesMap) {
                 state.unreadMsgCount = state.unreadMsgCount + unReadMessagesMap[from].length
@@ -137,8 +145,8 @@ const param = {
         setActive({ commit }, active) {
             commit('SET_ACTIVE', active)
         },
-        switchSession({commit}, payload) {
-            commit('SWITCH_SESSION', payload)
+        switchSession({commit}, from) {
+            commit('SWITCH_SESSION', from)
         },
         clearSession({commit}){
             commit('CLEAR_SESSION')
@@ -159,6 +167,12 @@ const param = {
             listFriendReq().then(response => {
                     commit('GET_REQUEST_CONTACTS', response)
                 })
+        },
+        setMessage({commit}, message) {
+            ws.sengMessage(from).then(() => {
+                commit('SET_MESSAGE', message)
+            })
+            
         },
         setRemark({commit}, payload){
             return new Promise((resolve, reject) => {

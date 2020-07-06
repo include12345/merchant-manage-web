@@ -2,11 +2,11 @@
     <div class="session-section">
         <mt-loadmore class="load-more" :top-method="loadUnread" @top-status-change="handleTopChange" ref="loadMore">
             <load-more-top slot="top" :topStatus="topStatus"></load-more-top>
-            <ul class="session-list" :style="{'min-height':height+'px'}">
+            <ul class="session-list">
                 <div class="lost-msg" v-show="lostConnect">
                     <p>正在尝试重新连接...</p>
                 </div>
-                <div class="no-message" :style="{'height':height+'px'}" v-show="showNoMsg">
+                <div class="no-message" v-show="showNoMsg">
                     <div>
                        <img src="@/icons/img/msg.png"/>
                        <h4>暂时没有新消息</h4> 
@@ -56,8 +56,8 @@ export default {
     },
     methods: {
             switchSession (from) {
-                this.$store.dispatch('switchSession', {from}).then(() => {
-                    this.$router.push({path: '/messageSection'})
+                this.$store.dispatch('switchSession', from).then(() => {
+                    this.$router.push({path: '/chat/messageSection'})
                 })
             },
             handleTopChange(status) {

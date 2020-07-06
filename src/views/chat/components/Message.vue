@@ -1,10 +1,10 @@
 <template>
     <li class="message-list-item">
-        <div :class="'message-text' + (message.isMe ? 'text-right' : 'text-left')" @click="play">
+        <div :class="'message-text' + (isMe ? ' text-left' : ' text-right')" @click="play">
             <svg v-show="loading" class="loading" version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40px" height="40px" viewbox="0 0 50 50" style="enable-backendgroup:new 0 0 50 50;" xml:space="preserve">
-                <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z" transform="rotate(325.811 25 25)">
+                <!-- <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z" transform="rotate(325.811 25 25)">
                     <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform>
-                </path>
+                </path> -->
             </svg>
             <i v-show="isTimeout" @click="resend" style="color: #F56C6C" class="icon icon-notification loading"></i>
             <span v-if="message.duration" :style="'width:' +(message.duration * 18) + 'px'">
@@ -12,9 +12,9 @@
                 <i :class="'icon icon-' +(playing ? 'pause2' : 'play3')"></i>
                 <!-- <audio ref="audio" :src="host + '/apis/user/getVoice/' + message.id + '.wav'" preload="none"></audio> -->
             </span>
-            <font v-if="!message.duration">{{message.content}}</font>
+            <font>{{message.content}}</font>
         </div>
-        <img :class="'user-icon' +(message.isMe ? 'icon-right' : 'icon-left')" :src="imgSrc">
+        <img :class="'user-icon' +(isMe ? ' icon-left' : ' icon-right')" :src="imgSrc">
     </li>
 </template>
 <script>
@@ -30,14 +30,16 @@ export default {
     },
     computed: {
         ...mapGetters({
-            session: 'currentSession',
-            friendsInfo: 'friendsInfo',
-            profilePhotoVersion: 'profilePhotoVersion'
+            session: 'currentSession'
         }),
+        isMe() {
+            return this.message.to != this.from
+        },
         loading() {
-            return this.message.isMe && !this.message.sent && !this.message.timeout
+            return this.message.to != this.from && !this.message.sent && !this.message.timeout
         },
         istimeout() {
+            console.log("this.message:" + this.message)
             return this.message.isMe && this.message.timeout
         },
         profilePhoto() {
@@ -53,7 +55,8 @@ export default {
         }
     },
     props: {
-        message: Object
+        message: Object,
+        from: String
     },
     methods: {
         resend() {
@@ -131,7 +134,7 @@ export default {
     .text-left {
       float: left;
       margin-left: 78px;
-      background: #fff;
+      background: #d0e6b8;
       > span {
         text-align: left;
       }
@@ -142,7 +145,7 @@ export default {
     }
     .text-left:before {
       left: -7px;
-      border-right: 10px solid #fff;
+      border-right: 10px solid #d0e6b8;
     }
 
     .user-icon {

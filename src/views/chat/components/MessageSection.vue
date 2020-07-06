@@ -1,8 +1,7 @@
 <template>
-<div class="app-container">
     <transition name="fade">
         <div class="message">
-            <mt-header :title="session.remark || session.from">
+            <mt-header :title="currentSession.remark || currentSession.from">
                 <a href="javascript:;" slot="left" @click="back">
                     <mt-button icon="back">返回</mt-button>
                 </a>
@@ -10,9 +9,11 @@
             <div class="message-section">
                 <ul class="message-list" ref="list">
                     <message 
-                        v-for="message in sortedMessages"
-                        :key="message.id"
-                        :message="message">
+                        v-for="message in currentSession.messages"
+                        :key="message.messageId"
+                        :message="message"
+                        :from="currentSession.from"
+                        >
                     </message>
                 </ul>
             </div> 
@@ -25,9 +26,7 @@
                 <mt-button class="btn-send" type="primary" size="small" @click="sendMessage">发送</mt-button>
             </div>
         </div>
-    
     </transition>
-</div>
 </template>
 
 <script>
@@ -46,18 +45,16 @@
             }
         },
         computed: {
-            ...mapGetters({
-                session: 'currentSession',
-                messages: 'currentMessages'
-            }),
-            sortedMessages() {
-                return this.messages
-                .slice()
-                .sort((a,b) => a.timestamp - b.timestamp)
-            }
+            ...mapGetters(['currentSession']),
+            // sortedMessages() {
+            //     console.log()
+            //     return this.currentSession.messages
+            //     // .slice()
+            //     // .sort((a,b) => a.ctime - b.ctime)
+            // }
         },
         watch: {
-            'session.lastMessage': function() {
+            'currentSession.lastMessage': function() {
                 this.$nextTick(() => {
                     const ul = this.$refs.list
                     ul.scrollTop = ul.scrollHeight
@@ -98,7 +95,7 @@
                 if(this.msg) {
                     this.$store.dispatch('sendMessage', {
                         content: this.msg,
-                        session:this.session
+                        // session:this.session
                     }).then(() => {
                         this.msg = ''
                     }).catch((err) => {
@@ -118,16 +115,16 @@
             }
             
         },
-        mounted() {
-            if(!this.session || Object.keys(this.session).length === 0) {
-                this.$router.push('/')
-            }
-        }
+        // mounted() {
+        //     if(!this.session || Object.keys(this.session).length === 0) {
+        //         this.$router.push('/')
+        //     }
+        // }
     }
 </script>
 <style lang="scss">
 .message {
-    width: 100%;
+    // width: 100%;
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;

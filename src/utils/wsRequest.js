@@ -3,7 +3,6 @@ import Stomp from 'stompjs'
 import {MessageBox} from "element-ui";
 import {getToken} from '@/utils/auth'
 import store from '../store'
-import {listFriendReq } from '@/api/api'
 
 let ws = {
   webSocket: null,
@@ -146,28 +145,24 @@ let ws = {
       this.disconnect()
   },
 
-  createMessage({content, session, data, duration}) {
+  sendMessage({content, from, to}) {
       const message = {
-          id: 'm_' + uuidv4(),
-          from: getToken().username,
-          isMe: true,
-          to: session.from,
-          content,
-          remark: session.remark,
-          timestamp: Date.now(),
-          MessageTypeEnum: duration ? 'MEDIA': 'SMS',
-          data,
-          duration,
-          sent: false,
-          timeout: false
+          messageId: 'm_' + uuidv4(),
+          from: from,
+          to: to,
+          content: content,
+          type: 'SMS',
+          ctime: Date.now(),
+          sent: false
       }
       if(!store.getters.lostConnect) {
-          if(duration) {
-              this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
-          } else {
-              this.webSocket.send('/notify', {}, JSON.stringify(message))
-          }
+          // if(duration) {
+          //     this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
+          // } else {
+              this.webSocket.send('/chat', {}, message)
+          // }
           message.sent = true
+          store.commit('ADD_SEND_MSG', message)
       } else {
           store.commit('ADD_UN_SEND_MSG', message)
       }
@@ -187,9 +182,10 @@ let ws = {
       }
   },
   remarkHasRead(friendName) {
-      let username = getToken().username
-      let param = {from:friendName, to: username, MessageTypeEnum: 'HAS_READ'}
-      this.webSocket.send('/notify', {}, JSON.stringify(param))
+      // let username = getToken().username
+      let param = {from:friendName, to: 'test', type: 'HAS_READ'}
+      console.log("param:"+param)
+      this.webSocket.send('/chat', {}, JSON.stringify(param))
   },
 
   resendAllMsg() {
@@ -220,52 +216,3 @@ let ws = {
 }
 
 export default ws
-
-
-// const service = axios.create({
-//   baseURL: process.env.BASE_API,
-//   timeout: 15000
-// })
-
-// service.interceptors.request.use(config => {
-//   return config
-// }, error => {
-//   Promise.reject(error)
-// })
-
-// service.interceptors.response.use(response => {
-//   const res = response.data
-//   if (res.code === 4) {
-//     MessageBox.alert('登录超时', '确定登出', {
-//       confirmButtonText: '确定',
-//       type: 'warning'
-//     }).then(() => {
-//       store.dispatch('FedLogOut').then(() => {
-//         location.reload()// 为了重新实例化vue-router对象 避免bug
-//       })
-//     })
-//     return 
-//   }
-  
-//   if (res.code != 0) {
-//     Message({
-//       message: res.msg,
-//       type: 'error',
-//       duration:  1000
-//     });
-//     return Promise.reject(res.msg);
-//   }
-//   return res.data
-// }, error => {
-//     MessageBox.alert('登录超时', '确定登出', {
-//       confirmButtonText: '确定',
-//       type: 'warning'
-//     }).then(() => {
-//       store.dispatch('FedLogOut').then(() => {
-//         location.reload()// 为了重新实例化vue-router对象 避免bug
-//       })
-//     })
-//   return Promise.reject(error);
-// })
-
-// export default service

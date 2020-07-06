@@ -48,11 +48,7 @@
             },
             switchSession() {
                 let from = this.friendName
-                let remark = this.remark
-                if (!this.remark) {
-                    remark = this.friendName
-                }
-                this.$store.dispatch('switchSession', {from, remark}).then(() => {
+                this.$store.dispatch('switchSession', {from}).then(() => {
                     this.$router.push({path: '/chat/messageSection'})
                 })
             },
