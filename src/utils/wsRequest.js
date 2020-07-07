@@ -2,6 +2,8 @@ import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 import {MessageBox} from "element-ui";
 import {getToken} from '@/utils/auth'
+import {uuidv4} from '@/utils/toolUtil'
+
 import store from '../store'
 
 let ws = {
@@ -27,7 +29,7 @@ let ws = {
       let sockJs = new SockJS(process.env.BASE_API +'/websocketchat')
       this.webSocket = Stomp.over(sockJs)
       const headers = {}
-      headers['token'] = 'getToken().token'
+      // headers['token'] = 'getToken().token'
       let vm = this
       this.webSocket.connect(headers, function() {
         vm.connectCallback(username)
@@ -145,10 +147,10 @@ let ws = {
       this.disconnect()
   },
 
-  sendMessage({content, from, to}) {
+  sendMessage(content, to) {
       const message = {
           messageId: 'm_' + uuidv4(),
-          from: from,
+          from: "test",
           to: to,
           content: content,
           type: 'SMS',
@@ -159,7 +161,8 @@ let ws = {
           // if(duration) {
           //     this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
           // } else {
-              this.webSocket.send('/chat', {}, message)
+            console.log("chat:"+ JSON.stringify(message))
+              this.webSocket.send('/chat', {}, JSON.stringify(message))
           // }
           message.sent = true
           store.commit('ADD_SEND_MSG', message)

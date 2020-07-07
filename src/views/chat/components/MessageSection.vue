@@ -93,18 +93,22 @@
             },
             sendMessage() {
                 if(this.msg) {
+                    console.log("from:"+this.currentSession.from)
                     this.$store.dispatch('sendMessage', {
-                        content: this.msg,
-                        // session:this.session
-                    }).then(() => {
-                        this.msg = ''
-                    }).catch((err) => {
-                        this.$message({
-                            message: err,
-                            type: "error",
-                            duration: 1000
-                        });
+                        content:this.msg, 
+                        to: this.currentSession.from
                     })
+                    this.msg = ''
+                        // session:this.session
+                    // }).then(() => {
+                    //     this.msg = ''
+                    // }).catch((err) => {
+                    //     this.$message({
+                    //         message: err,
+                    //         type: "error",
+                    //         duration: 1000
+                    //     });
+                    // })
                 }
             },
             back() {

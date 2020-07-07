@@ -53,10 +53,11 @@ const param = {
         },
 
         CLEAR_SESSION: (state) => {
-            state.currentFrom = null
+            state.currentSession = null
         },
 
         ADD_SEND_MSG: (state, message) => {
+            console.log("message:"+JSON.stringify(message))
             if(state.currentSession != null && state.currentSession.messages != null) {
                 state.currentSession.messages.push(message)
             } else {
@@ -119,9 +120,6 @@ const param = {
             
             
         },
-        GET_FRIEND_INFO: (state, {friendName, friendInfo}) => {
-            Vue.set(state.friendsInfo, friendName, friendInfo)
-        },
         SET_REMARK: (state, {friendName, remark}) => {
             var tag = friendName.substring(0, 1)
             state.contacts.forEach(contact => {
@@ -168,10 +166,9 @@ const param = {
                     commit('GET_REQUEST_CONTACTS', response)
                 })
         },
-        setMessage({commit}, message) {
-            ws.sengMessage(from).then(() => {
-                commit('SET_MESSAGE', message)
-            })
+        sendMessage({commit}, payload) {
+            console.log("payload:"+JSON.stringify(payload))
+            ws.sendMessage(payload.content, payload.to)
             
         },
         setRemark({commit}, payload){
