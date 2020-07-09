@@ -7,7 +7,7 @@ const param = {
     state: {
 
         consumer: {},
-        sessions: [],
+        sessions: {},
         currentSession: {},
         currentMessages: [],
         messages:{},
@@ -34,18 +34,12 @@ const param = {
         },
         SWITCH_SESSION: (state, from) => {
             console.log("state:" + JSON.stringify(state.sessions) + "from:" + from)
-            state.currentSession = {}
-            for (var i = 0; i < state.sessions.length; i++) {
-                if(state.sessions[i].from == from) {
-                    console.log("state.sessions[i]:" + JSON.stringify(state.sessions[i]))
-                    state.currentSession = state.sessions[i]
-                }
-            }
+            state.currentSession = state.sessions[from]    
             console.log("state.currentSession:" + JSON.stringify(state.currentSession))
             if(state.currentSession.unreadMsgCount != null && state.currentSession.unreadMsgCount > 0 ) {
                 state.unreadMsgCount -= state.currentSession.unreadMsgCount
                 if (state.currentSession.unreadMsgCount > 0) {
-                    // ws.remarkHasRead(from)
+                    ws.remarkHasRead(from)
                 }
                 state.currentSession.unreadMsgCount = 0
             }
@@ -53,12 +47,12 @@ const param = {
         },
 
         CLEAR_SESSION: (state) => {
-            state.currentSession = null
+            state.currentSession = {}
         },
 
         ADD_SEND_MSG: (state, message) => {
             console.log("message:"+JSON.stringify(message))
-            if(state.currentSession != null && state.currentSession.messages != null) {
+            if(state.currentSession.messages != null) {
                 state.currentSession.messages.push(message)
             } else {
                 state.currentSession = {
@@ -66,11 +60,49 @@ const param = {
                     messages: [message]
                 }
             }
+            state.currentSession.lastMessage = message.content
+            Vue.set(state.sessions, message.to, state.currentSession)
+        },
+        GET_NEW_MESSAGE: (state, message) => {
+            state.unreadMsgCount = state.unreadMsgCount + 1
+            if(state.currentSession.from == message.from) {
+                state.currentSession.messages.push(message)
+                state.currentSession.lastMessage = message.content
+                Vue.set(state.sessions, message.to, state.currentSession)
+            } else if(state.sessions[message.from]) {
+                state.sessions[message.from].messages.push(message)
+                state.sessions[message.from].lastMessage = message.content
+                state.sessions[message.from].unreadMsgCount ++
+            } else {
+                var contact = null
+                for (var i = 0; i < state.contacts.length; i++) {
+                    if(state.contacts[i].friendname == message.from) {
+                        contact = state.contacts[i]
+                        break;
+                    }
+                }
+                var imageUrl = null
+                var remark = null
+                if(contact) {
+                    imageUrl = contact.imageUrl
+                    remark = contact.remark
+                }
+                var session = {
+                    from: message.from,
+                    imageUrl: imageUrl,
+                    remark: remark,
+                    messages: [message],
+                    lastMessage = message.content,
+                    unreadMsgCount: 1
+                }
+                Vue.set(state.sessions, message.from, session)
+            }
             
+            console.log("message:"+JSON.stringify(message))
         },
         
         GET_UNREAD_MESSAGES: (state, unReadMessagesMap) => {
-            state.sessions = []
+            state.sessions = {}
             state.unreadMsgCount = 0
             console.log("unReadMessagesMap:" + JSON.stringify(unReadMessagesMap))
             for(var from in unReadMessagesMap) {
@@ -79,6 +111,7 @@ const param = {
                 for (var i = 0; i < state.contacts.length; i++) {
                     if(state.contacts[i].friendname == from) {
                         contact = state.contacts[i]
+                        break;
                     }
                 }
                 var imageUrl = null
@@ -92,10 +125,10 @@ const param = {
                     imageUrl: imageUrl,
                     remark: remark,
                     messages: unReadMessagesMap[from],
-                    lastMessage: unReadMessagesMap[from][0],
+                    lastMessage: unReadMessagesMap[from][unReadMessagesMap[from].length - 1],
                     unreadMsgCount: unReadMessagesMap[from].length
                 }
-                state.sessions.push(session)
+                Vue.set(state.sessions, from, session)
             }
         },
         GET_CONTACTS: (state, contacts) => {

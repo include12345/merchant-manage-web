@@ -116,7 +116,9 @@ let ws = {
               // store.dispatch('onMessage', {message})
               return
           case 'SMS':
-              // store.dispatch('onMessage', {message})
+            var loadMessage = JSON.parse(message.message)
+
+            store.commit('GET_NEW_MESSAGE', loadMessage)
               return
           case 'PUSH_OUT':
               // this.onPushOut()
@@ -171,19 +173,19 @@ let ws = {
       }
   },
 
-  resend(message) {
-      store.commit('SET_MESSAGE_TIMEOUT', {id: message.id, timeout: false, timestamp: Date.now()})
-      if(!store.getters.lostConnect) {
-          if(message.duration) {
-              this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
-          } else {
-              this.webSocket.send('/notify', {}, JSON.stringify(message))
-          }
-          message.sent = true
-      } else {
-          store.commit('ADD_UN_SEND_MSG', message)
-      }
-  },
+//   resend(content, to) {
+//       store.commit('SET_MESSAGE_TIMEOUT', {id: message.id, timeout: false, timestamp: Date.now()})
+//       if(!store.getters.lostConnect) {
+//           if(message.duration) {
+//               this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
+//           } else {
+//               this.webSocket.send('/notify', {}, JSON.stringify(message))
+//           }
+//           message.sent = true
+//       } else {
+//           store.commit('ADD_UN_SEND_MSG', message)
+//       }
+//   },
   remarkHasRead(friendName) {
       // let username = getToken().username
       let param = {from:friendName, to: 'test', type: 'HAS_READ'}
