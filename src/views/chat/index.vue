@@ -93,15 +93,15 @@ export default {
       }
     }
   },
-  beforeCreate: function() {
-      this.$nextTick(function() {
-            this.$store.dispatch("getContacts");
-            this.$store.dispatch("subscribeMsg");
-            this.$store.dispatch("listFriendReq");
-            this.$store.dispatch("getUnReadMessages");
+  // beforeCreate: function() {
+  //     this.$nextTick(function() {
+  //           this.$store.dispatch("getContacts");
+  //           this.$store.dispatch("subscribeMsg");
+  //           this.$store.dispatch("listFriendReq");
+  //           this.$store.dispatch("getUnReadMessages");
 
-      });
-  },
+  //     });
+  // },
 
   created() {
     this.height = document.documentElement.clientHeight - 300;

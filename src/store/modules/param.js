@@ -36,12 +36,16 @@ const param = {
             console.log("state:" + JSON.stringify(state.sessions) + "from:" + from)
             state.currentSession = state.sessions[from]    
             console.log("state.currentSession:" + JSON.stringify(state.currentSession))
-            if(state.currentSession.unreadMsgCount != null && state.currentSession.unreadMsgCount > 0 ) {
-                state.unreadMsgCount -= state.currentSession.unreadMsgCount
-                if (state.currentSession.unreadMsgCount > 0) {
-                    ws.remarkHasRead(from)
+            if(state.currentSession != null) {
+                if( state.currentSession.unreadMsgCount != null && state.currentSession.unreadMsgCount > 0 ) {
+                    state.unreadMsgCount -= state.currentSession.unreadMsgCount
+                    if (state.currentSession.unreadMsgCount > 0) {
+                        ws.remarkHasRead(from)
+                    }
+                    state.currentSession.unreadMsgCount = 0
                 }
-                state.currentSession.unreadMsgCount = 0
+            } else {
+                state.currentSession = {} 
             }
            
         },
@@ -92,7 +96,7 @@ const param = {
                     imageUrl: imageUrl,
                     remark: remark,
                     messages: [message],
-                    lastMessage = message.content,
+                    lastMessage: message.content,
                     unreadMsgCount: 1
                 }
                 Vue.set(state.sessions, message.from, session)

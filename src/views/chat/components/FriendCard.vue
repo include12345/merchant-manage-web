@@ -47,8 +47,8 @@
                 //todo
             },
             switchSession() {
-                let from = this.friendName
-                this.$store.dispatch('switchSession', {from}).then(() => {
+                // let from = this.friendName
+                this.$store.dispatch('switchSession', this.friendName).then(() => {
                     this.$router.push({path: '/chat/messageSection'})
                 })
             },

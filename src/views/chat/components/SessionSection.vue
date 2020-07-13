@@ -64,7 +64,7 @@ export default {
                 this.topStatus = status
             },
             loadUnread() {
-                this.$store.dispatch('getUnReadMessages')
+                // this.$store.dispatch('getUnReadMessages')
             }
     }
 }
