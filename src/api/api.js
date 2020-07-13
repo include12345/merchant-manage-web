@@ -53,7 +53,7 @@ export function listMerchantConsumerPaging(form) {
       "pageSize":form.pageSize
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -65,7 +65,7 @@ export function deleteMerchantConsumer(id) {
     method: 'delete',
     params: {},
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -81,7 +81,7 @@ export function addConsumer(form) {
       "wechat":form.consumerWechat
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -98,7 +98,7 @@ export function updateConsumer(id, form) {
       "wechat":form.consumerWechat
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -113,7 +113,7 @@ export function getConsumer(id) {
       "consumerId":id
     },
     headers:{
-      "token":getToken()[0]
+      "token":getToken().token
     }
   })
 }
@@ -131,7 +131,7 @@ export function listProductPaging(form) {
       "pageSize":form.pageSize
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -143,7 +143,7 @@ export function deleteProduct(id) {
     method: 'delete',
     params: {},
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -163,7 +163,7 @@ export function addProduct(form) {
       "industryId":form.industryId
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -186,7 +186,7 @@ export function updateProduct(id, form) {
       "industryId":form.industryId
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -201,7 +201,7 @@ export function getProduct(id) {
       "productId":id
     },
     headers:{
-      "token":getToken()[0]
+      "token":getToken().token
     }
   })
 }
@@ -211,7 +211,7 @@ export function listIndustrys() {
     url: '/api/industry/listIndustryAll',
     method: 'get',
     headers:{
-      "token":getToken()[0]
+      "token":getToken().token
     }
   })
 }
@@ -230,7 +230,7 @@ export function listMerchantOrderPaging(form) {
       "pageSize":form.pageSize
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -243,7 +243,7 @@ export function listOrderTransaction(orderId) {
       "orderId":orderId
     },
     headers:{
-      "token": getToken()[0]
+      "token": getToken().token
     }
   })
 }
@@ -287,7 +287,7 @@ export function getFileUploadToken(filename, size) {
     method: 'get',
     params: {filename, size},
     headers:{
-      "token":getToken()[0]+'-'+'uploadPictureToken'
+      "token":getToken().token+'-'+'uploadPictureToken'
     }
   })
 }
@@ -310,7 +310,7 @@ export function listFriends() {
     url: '/friend/listFriends',
     method: 'get',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     }
   })
 }
@@ -321,7 +321,7 @@ export function listFriendReq() {
     url: '/friend/listFriendReq',
     method: 'get',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     }
   })
 }
@@ -332,7 +332,7 @@ export function listUnReadMessages() {
     url: '/record/listUnReadMessages',
     method: 'get',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     }
   })
 }
@@ -359,7 +359,7 @@ export function addFriendRequest(friendName) {
     url: '/friend/addFriendRequest',
     method: 'post',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     },
     data: {
       "friendName": friendName
@@ -386,7 +386,7 @@ export function deleteFriend(friendName) {
     url: '/friend/deleteFriend/'+ friendName,
     method: 'delete',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     }
   })
 }

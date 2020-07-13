@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import ws from  '@/utils/wsRequest'
 import { listFriends, listFriendReq, listUnReadMessages } from '@/api/api'
-
+import {getToken} from '@/utils/auth'
 
 const param = {
     state: {
@@ -221,7 +221,7 @@ const param = {
             })
         },
         subscribeMsg({commit}) {
-            ws.subscribe('test') 
+            ws.subscribe(getToken().token) 
         }
     }
 }

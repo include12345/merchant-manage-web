@@ -3,14 +3,14 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
     state: {
-        tokens: getToken(),
+        tokens: {},
         name: '',
         avatar: '',
         roles: []
     },
 
     mutations: {
-        SET_TOKEN: (state, tokens) => {
+        SET_TOKEN: (state, {tokens}) => {
             state.tokens = tokens
           }
         //   SET_AVATAR: (state, avatar) => {

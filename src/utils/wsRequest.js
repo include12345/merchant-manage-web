@@ -152,7 +152,7 @@ let ws = {
   sendMessage(content, to) {
       const message = {
           messageId: 'm_' + uuidv4(),
-          from: "test",
+          from: getToken().username,
           to: to,
           content: content,
           type: 'SMS',
@@ -188,35 +188,35 @@ let ws = {
 //   },
   remarkHasRead(friendName) {
       // let username = getToken().username
-      let param = {from:friendName, to: 'test', type: 'HAS_READ'}
+      let param = {from:friendName, to: getToken().username, type: 'HAS_READ'}
       console.log("param:"+param)
       this.webSocket.send('/chat', {}, JSON.stringify(param))
   },
 
-  resendAllMsg() {
-      let messages = store.getters.unSendMsg
-      if(messages.length > 0) {
-          for(let i = messages.length -1; i >= 0; i--) {
-              let message = messages[i]
-              if(Date.now() - message.timestamp > 60000) {
-                  store.commit('SET_MESSAGE_TIMEOUT', {id: message.id, timeout: true})
-                  store.commit('REMOVE_UNSENT_MESSAGE', i)
-                  continue
-              }
-              if(store.getters.connected) {
-                  if(message.duration) {
-                      this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
-                  } else {
-                      this.webSocket.send('/notify', {}, JSON.stringify(message))
-                  }
-                  store.commit('SET_MESSAGE_SENT', message.id)
-                  store.commit('REMOVE_UNSENT_MESSAGE', i)
-                  continue
-              }
-              break
-          }
-      }
-  }
+//   resendAllMsg() {
+//       let messages = store.getters.unSendMsg
+//       if(messages.length > 0) {
+//           for(let i = messages.length -1; i >= 0; i--) {
+//               let message = messages[i]
+//               if(Date.now() - message.timestamp > 60000) {
+//                   store.commit('SET_MESSAGE_TIMEOUT', {id: message.id, timeout: true})
+//                   store.commit('REMOVE_UNSENT_MESSAGE', i)
+//                   continue
+//               }
+//               if(store.getters.connected) {
+//                   if(message.duration) {
+//                       this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
+//                   } else {
+//                       this.webSocket.send('/notify', {}, JSON.stringify(message))
+//                   }
+//                   store.commit('SET_MESSAGE_SENT', message.id)
+//                   store.commit('REMOVE_UNSENT_MESSAGE', i)
+//                   continue
+//               }
+//               break
+//           }
+//       }
+//   }
   
 }
 
