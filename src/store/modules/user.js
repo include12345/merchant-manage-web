@@ -10,7 +10,7 @@ const user = {
     },
 
     mutations: {
-        SET_TOKEN: (state, {tokens}) => {
+        SET_TOKEN: (state, tokens) => {
             state.tokens = tokens
           }
         //   SET_AVATAR: (state, avatar) => {
@@ -32,7 +32,8 @@ const user = {
                         token: response.token,
                         username: username
                     }
-                    setToken(this.tokens)
+                    
+                    setToken(JSON.stringify(this.tokens))
                     commit('SET_TOKEN', this.tokens)
                     // commit('SET_NAME',response.name)
                     resolve(response)

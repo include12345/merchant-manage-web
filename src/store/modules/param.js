@@ -45,7 +45,9 @@ const param = {
                     state.currentSession.unreadMsgCount = 0
                 }
             } else {
-                state.currentSession = {} 
+                state.currentSession = {
+                    from: from
+                } 
             }
            
         },
@@ -221,7 +223,7 @@ const param = {
             })
         },
         subscribeMsg({commit}) {
-            ws.subscribe(getToken().token) 
+            ws.subscribe(getToken().username) 
         }
     }
 }
