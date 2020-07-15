@@ -16,6 +16,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(response => {
   const res = response.data
   if (res.code === 4) {
+    
     MessageBox.alert('登录超时', '确定登出', {
       confirmButtonText: '确定',
       type: 'warning'

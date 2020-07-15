@@ -44,11 +44,11 @@ export default {
             this.$router.push({path: '/chat/friendCard', query: {friendName}})
         }
     },
-//     beforeCreate: function() {
-//         this.$nextTick(function() {
-//             this.$store.dispatch("getContacts");
-//         });
-//   }
+    beforeCreate: function() {
+        this.$nextTick(function() {
+            this.$store.dispatch("getContacts");
+        });
+  }
 }
 </script>
 <style lang="scss">

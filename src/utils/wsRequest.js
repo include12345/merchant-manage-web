@@ -1,6 +1,6 @@
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
-import {MessageBox} from "element-ui";
+import { Notification } from 'element-ui';
 import {getToken} from '@/utils/auth'
 import {uuidv4} from '@/utils/toolUtil'
 
@@ -107,11 +107,18 @@ let ws = {
               // store.commit('DELETE_FRIEND', message)
               return
           case 'ADD_FRIEND':
-            var requestContacts = []
-            var requestContact = JSON.parse(message.message)
-            requestContacts.push(requestContact)
-            store.commit('GET_REQUEST_CONTACTS', requestContacts)
-            return
+            // var requestContacts = []
+            // requestContacts.push(requestContact)
+            console.log("requestContact:"+message.from)
+            // store.commit('SET_CONTACT', requestContacts)
+            Notification({
+                title: '好友添加请求',
+                message: message.from+"请求添加好友",
+                type: 'success',
+                duration: 0
+              });
+              return;
+            // store.dispatch("getContacts");
           case 'MEDIA':
               // store.dispatch('onMessage', {message})
               return
@@ -124,10 +131,22 @@ let ws = {
               // this.onPushOut()
               return
           case 'DEAL_ADD_FRIEND_REQ':
-            store.commit('DEAL_ADD_FRIEND_REQ', message)
+            console.log("DEAL_ADD_FRIEND_REQ:"+message)
+            Notification({
+                title: '好友通过添加',
+                message: friend.friendname+"通过您的好友添加",
+                type: 'success',
+                duration: 0
+              });
             return
           case 'ACCEPTED_FRIEND_REQ':
-           
+            // var friend = JSON.parse(message.content)
+
+            // Notification({
+            //     title: '成功',
+            //     message: friend.friendname+"通过您的好友添加",
+            //     type: 'success'
+            //   });
               // store.commit('ACCEPTED_FRIEND_REQ', message)
               return
           default:

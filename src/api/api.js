@@ -345,7 +345,7 @@ export function searchFriend(friendName) {
     url: '/friend/searchFriend',
     method: 'get',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     },
     params: {
       "friendName": friendName
@@ -372,7 +372,7 @@ export function dealFriendReq(friendName, status) {
     url: '/friend/dealFriendReq',
     method: 'post',
     headers:{
-      "token": "getToken().token"
+      "token": getToken().token
     },
     data: {
       "friendName": friendName,

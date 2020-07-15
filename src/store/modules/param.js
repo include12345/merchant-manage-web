@@ -141,23 +141,8 @@ const param = {
             state.contacts = contacts
         },
         GET_REQUEST_CONTACTS: (state, requestContacts) =>{
-            if(state.requestContacts.length > 0) {
-                for (var i = 0; i < state.requestContacts.length; i++) {
-                    for (var j = 0; j < requestContacts.length; j++) {
-                        if(requestContacts[i].friendname == state.requestContacts[j].friendname) {
-                            requestContacts.splice(j, 1)
-                        }
-                    }
-                }
-                state.requestContacts = state.requestContacts.concat(requestContacts)
-                state.unreadReqCount = state.requestContacts.length
-            } else {
-                state.requestContacts = requestContacts
-                state.unreadReqCount = requestContacts.length
-            }
-            
-            
-            
+            state.requestContacts = requestContacts;
+            state.unreadReqCount = requestContacts.length
         },
         SET_REMARK: (state, {friendName, remark}) => {
             var tag = friendName.substring(0, 1)
@@ -228,34 +213,5 @@ const param = {
     }
 }
 
-
-function createSession(state, from, remark) {
-    Vue.set(state.param.sessions, from, {
-        from,
-        remark, 
-        messages: [],
-        lastMessage: null,
-        unreadReqCount: 0
-    })
-}
-
-function addMessage(state, message) {
-    console.log(message)
-    let from = message.isMe ? message.to : message.from
-    message.isRead = from === state.param.currentFrom
-    const session = state.param.sessions[from]
-    if(!session.messages.some(id => id === message.id)) {
-        session.messages.push(message.id)
-        session.lastMessage = message
-        if(!message.isRead) {
-            ++session.unreadReqCount
-            ++state.param.unreadReqCount
-        }
-    }
-    if(!message.isMe && message.isRead) {
-        ws.remarkHasRead(from)
-    }
-    state.param.sessions[from].unreadReqCount = 0
-}
 
 export default param

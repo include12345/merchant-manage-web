@@ -34,7 +34,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'friends'
+            'contacts'
         ]),
         title() {
             return '搜索:' + this.value
@@ -54,8 +54,8 @@ export default {
     },
     methods: {
         checkFriendExisted(username) {
-            for(var i = 0; i < this.friends.length; i++){
-                if(username === this.friends[i]){
+            for(var i = 0; i < this.contacts.length; i++){
+                if(username === this.contacts[i].friendname){
                     return true;
                 }
             }
@@ -65,7 +65,7 @@ export default {
             if (!this.value) {
                 return
             }
-            if (this.value === this.$store.getters.username) {
+            if (this.value === this.$store.getters.tokens.username) {
                 MessageBox.close()
                 this.$nextTick(() => {
                     MessageBox.alert(
