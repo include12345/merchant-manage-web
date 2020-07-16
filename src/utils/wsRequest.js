@@ -98,11 +98,11 @@ let ws = {
   onMessage(message) {
     console.log("message:" +JSON.stringify(message))
     // requestContact = JSON.parse(message)
-
-      if (message.type == null) {
+     var data = message.data
+      if (data.type == null) {
         this.errorCallback(message)
       }
-      switch(message.type) {
+      switch(data.type) {
           case 'DELETE_FRIEND':
               // store.commit('DELETE_FRIEND', message)
               return
@@ -123,15 +123,19 @@ let ws = {
               // store.dispatch('onMessage', {message})
               return
           case 'SMS':
-            var loadMessage = JSON.parse(message.message)
-
-            store.commit('GET_NEW_MESSAGE', loadMessage)
+            // var loadMessage = JSON.parse(message.message)
+            store.commit('GET_NEW_MESSAGE', data)
+            Notification({
+                title: '新消息',
+                message: data.content,
+                type: 'success'
+              });
               return
           case 'PUSH_OUT':
               // this.onPushOut()
               return
           case 'DEAL_ADD_FRIEND_REQ':
-            console.log("DEAL_ADD_FRIEND_REQ:"+message)
+            console.log("DEAL_ADD_FRIEND_REQ:"+data)
             Notification({
                 title: '好友通过添加',
                 message: friend.friendname+"通过您的好友添加",
