@@ -119,6 +119,10 @@
             }
             
         },
+        destroyed: function() {
+            console.log("clearSession:")
+            this.$store.dispatch('clearSession')
+        }
         // mounted() {
         //     if(!this.session || Object.keys(this.session).length === 0) {
         //         this.$router.push('/')

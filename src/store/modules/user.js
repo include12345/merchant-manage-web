@@ -1,5 +1,6 @@
 import { login, logout, checkToken } from '@/api/api'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import ws from  '@/utils/wsRequest'
 
 const user = {
     state: {
@@ -66,6 +67,7 @@ const user = {
                     // commit('SET_ROLES', [])
                     removeToken()
                     resolve()
+                    ws.disconnect()
                 }).catch(error => {
                     reject(error)
                 })
@@ -77,6 +79,7 @@ const user = {
             return new Promise(resolve => {
                 commit('SET_TOKEN', null)
                 removeToken()
+                ws.disconnect()
                 resolve()
             })
         }

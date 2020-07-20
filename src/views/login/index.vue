@@ -66,6 +66,9 @@ export default {
           this.$router.push({
             path: '/home'
           })
+          this.$store.dispatch("subscribeMsg");
+          this.store.dispatch("listFriendReq");
+          this.store.dispatch("getUnReadMessages");
         }).catch(() => {
           this.loading = false
         })

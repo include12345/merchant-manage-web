@@ -7,14 +7,14 @@
 
 <script>
 export default {
-    beforeCreate: function() {
-      this.$nextTick(function() {
-            this.$store.dispatch("subscribeMsg");
-            this.$store.dispatch("listFriendReq");
-            this.$store.dispatch("getUnReadMessages");
+  //   beforeCreate: function() {
+  //     this.$nextTick(function() {
+  //           this.$store.dispatch("subscribeMsg");
+  //           this.$store.dispatch("listFriendReq");
+  //           this.$store.dispatch("getUnReadMessages");
 
-      });
-  },
+  //     });
+  // },
 }
 </script>
 

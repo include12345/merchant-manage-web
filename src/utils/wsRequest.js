@@ -18,7 +18,7 @@ let ws = {
       }
       if (this.webSocket && this.webSocket.connected) {
           const headers = {};
-          // headers['token'] = getToken().token
+        //   headers['token'] = getToken().token
           this.webSocket.unsubscribe()
           this.webSocket.disconnect(() => {}, headers)
           this.webSocket = null
@@ -54,27 +54,27 @@ let ws = {
       if (!store.getters.expiredTime || store.getters.expiredTime < Date.now()) {
           return
       }
-      store.commit('LOST_CONNECT', true)
-      store.commit('SET_CONNECTED', false)
-      this.checkUnsentMsgTimeout()
+    //   store.commit('LOST_CONNECT', true)
+    //   store.commit('SET_CONNECTED', false)
+    //   this.checkUnsentMsgTimeout()
       if (this.cleanId === -1) {
           this.reconnect()
       }
   },
 
-  checkUnsentMsgTimeout() {
-      let messages = store.getters.unSendMsg
-      if(messages.length > 0) {
-          for(let i = messages.length - 1; i >= 0; i--) {
-              let message = messages[i]
-              if(Date.now() - message.timestamp > 60000) {
-                  store.commit('SET_MESSAGE_TIMEOUT', {id: message.id, timeout: true})
-                  store.commit('REMOVE_UNSENT_MESSAGE', i)
-                  continue
-              }
-          }
-      }
-  },
+//   checkUnsentMsgTimeout() {
+//       let messages = store.getters.unSendMsg
+//       if(messages.length > 0) {
+//           for(let i = messages.length - 1; i >= 0; i--) {
+//               let message = messages[i]
+//               if(Date.now() - message.timestamp > 60000) {
+//                   store.commit('SET_MESSAGE_TIMEOUT', {id: message.id, timeout: true})
+//                   store.commit('REMOVE_UNSENT_MESSAGE', i)
+//                   continue
+//               }
+//           }
+//       }
+//   },
 
   reconnect() {
       this.cleanId = setInterval(() => {
@@ -82,10 +82,9 @@ let ws = {
               return
           }
           this.reconnecting = true
-          store.dispatch('subscribe_msg', getToken().username).then(()=> {
+          store.dispatch('subscribeMsg').then(()=> {
               clearInterval(this.cleanId)
               this.cleanId = -1
-              store.commit('LOST_CONNECT', false)
               store.dispatch('getContacts')
               store.dispatch('getUnReadMessage')
               this.reconnecting = false
@@ -96,7 +95,7 @@ let ws = {
   },
 
   onMessage(message) {
-    console.log("message:" +JSON.stringify(message))
+    // console.log("message:" +JSON.stringify(message))
     // requestContact = JSON.parse(message)
      var data = message.data
       if (data.type == null) {
@@ -124,6 +123,7 @@ let ws = {
               return
           case 'SMS':
             // var loadMessage = JSON.parse(message.message)
+            console.log("怪")
             store.commit('GET_NEW_MESSAGE', data)
             Notification({
                 title: '新消息',
@@ -159,19 +159,6 @@ let ws = {
       }
   },
 
-  onPushOut() {
-      store.dispatch('LogOut')
-      MessageBox.alert('登录超时', '确定登出', {
-          confirmButtonText: '确定',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
-          })
-        })
-      this.disconnect()
-  },
-
   sendMessage(content, to) {
       const message = {
           messageId: 'm_' + uuidv4(),
@@ -182,18 +169,31 @@ let ws = {
           ctime: Date.now(),
           sent: false
       }
-      if(!store.getters.lostConnect) {
+    //   if(!store.getters.lostConnect) {
           // if(duration) {
           //     this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
           // } else {
-            console.log("chat:"+ JSON.stringify(message))
-              this.webSocket.send('/chat', {}, JSON.stringify(message))
+              if(this.webSocket) {
+                console.log("chat:"+ JSON.stringify(message))
+                this.webSocket.send('/chat', {}, JSON.stringify(message))
+                message.sent = true
+                store.commit('ADD_SEND_MSG', message)
+              } else {
+                if (this.cleanId === -1) {
+                    this.reconnect()
+                } 
+              }
+            
+            //   this.webSocket.send('/chat', {}, JSON.stringify(message)).catch(() => {
+            //     if (this.cleanId === -1) {
+            //         this.reconnect()
+            //     }
+            // })
           // }
-          message.sent = true
-          store.commit('ADD_SEND_MSG', message)
-      } else {
-          store.commit('ADD_UN_SEND_MSG', message)
-      }
+         
+    //   } else {
+    //       store.commit('ADD_UN_SEND_MSG', message)
+    //   }
   },
 
 //   resend(content, to) {

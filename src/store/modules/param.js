@@ -38,7 +38,10 @@ const param = {
             console.log("state.currentSession:" + JSON.stringify(state.currentSession))
             if(state.currentSession != null) {
                 if( state.currentSession.unreadMsgCount != null && state.currentSession.unreadMsgCount > 0 ) {
-                    state.unreadMsgCount -= state.currentSession.unreadMsgCount
+                    if(state.unreadMsgCount != null && state.unreadMsgCount > 0) {
+                        state.unreadMsgCount -= state.currentSession.unreadMsgCount
+                    }
+                    
                     if (state.currentSession.unreadMsgCount > 0) {
                         ws.remarkHasRead(from)
                     }
@@ -67,18 +70,29 @@ const param = {
                 }
             }
             state.currentSession.lastMessage = message.content
-            Vue.set(state.sessions, message.to, state.currentSession)
+            // if(state.sessions[message.to]) {
+            //     state.sessions[message.to].messages.push(message)
+
+            // } else {
+            //     Vue.set(state.sessions, message.to, state.currentSession)
+            // }
+
+            if(!state.sessions[message.to]) {
+                Vue.set(state.sessions, message.to, state.currentSession)
+            }
+            
         },
         GET_NEW_MESSAGE: (state, message) => {
-            state.unreadMsgCount = state.unreadMsgCount + 1
-            if(state.currentSession.from == message.from) {
-                state.currentSession.messages.push(message)
-                state.currentSession.lastMessage = message.content
-                Vue.set(state.sessions, message.to, state.currentSession)
-            } else if(state.sessions[message.from]) {
-                state.sessions[message.from].messages.push(message)
-                state.sessions[message.from].lastMessage = message.content
-                state.sessions[message.from].unreadMsgCount ++
+            
+           if(state.sessions[message.from]) {
+                if(state.currentSession.from == message.from) {
+                    state.currentSession.messages.push(message)
+                    state.currentSession.lastMessage = message.content
+                } else {
+                    state.sessions[message.from].messages.push(message)
+                    state.unreadMsgCount = state.unreadMsgCount + 1
+                    state.sessions[message.from].unreadMsgCount ++
+                }
             } else {
                 var contact = null
                 for (var i = 0; i < state.contacts.length; i++) {
@@ -101,6 +115,7 @@ const param = {
                     lastMessage: message.content,
                     unreadMsgCount: 1
                 }
+                state.unreadMsgCount = state.unreadMsgCount + 1
                 Vue.set(state.sessions, message.from, session)
             }
             
