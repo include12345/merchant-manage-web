@@ -125,11 +125,11 @@ let ws = {
             // var loadMessage = JSON.parse(message.message)
             console.log("怪")
             store.commit('GET_NEW_MESSAGE', data)
-            Notification({
-                title: '新消息',
-                message: data.content,
-                type: 'success'
-              });
+            // Notification({
+            //     title: '新消息',
+            //     message: data.content,
+            //     type: 'success'
+            //   });
               return
           case 'PUSH_OUT':
               // this.onPushOut()
@@ -173,16 +173,16 @@ let ws = {
           // if(duration) {
           //     this.webSocket.send('/voiceNotify', {}, JSON.stringify(message))
           // } else {
-              if(this.webSocket) {
-                console.log("chat:"+ JSON.stringify(message))
-                this.webSocket.send('/chat', {}, JSON.stringify(message))
-                message.sent = true
-                store.commit('ADD_SEND_MSG', message)
-              } else {
-                if (this.cleanId === -1) {
-                    this.reconnect()
-                } 
-              }
+      if (this.webSocket == null) {
+          if (this.cleanId === -1) {
+              this.reconnect()
+          }
+      }
+      console.log("chat:" + JSON.stringify(message))
+      this.webSocket.send('/chat', {}, JSON.stringify(message))
+      message.sent = true
+      store.commit('ADD_SEND_MSG', message)
+    // }
             
             //   this.webSocket.send('/chat', {}, JSON.stringify(message)).catch(() => {
             //     if (this.cleanId === -1) {

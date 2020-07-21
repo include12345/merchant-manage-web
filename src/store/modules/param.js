@@ -2,6 +2,7 @@ import Vue from 'vue'
 import ws from  '@/utils/wsRequest'
 import { listFriends, listFriendReq, listUnReadMessages } from '@/api/api'
 import {getToken} from '@/utils/auth'
+import { Notification } from 'element-ui';
 
 const param = {
     state: {
@@ -89,6 +90,11 @@ const param = {
                     state.currentSession.messages.push(message)
                     state.currentSession.lastMessage = message.content
                 } else {
+                    Notification({
+                        title: '新消息',
+                        message: message.content,
+                        type: 'success'
+                      });
                     state.sessions[message.from].messages.push(message)
                     state.unreadMsgCount = state.unreadMsgCount + 1
                     state.sessions[message.from].unreadMsgCount ++
@@ -117,6 +123,11 @@ const param = {
                 }
                 state.unreadMsgCount = state.unreadMsgCount + 1
                 Vue.set(state.sessions, message.from, session)
+                Notification({
+                    title: '新消息',
+                    message: data.content,
+                    type: 'success'
+                });
             }
             
             console.log("message:"+JSON.stringify(message))
