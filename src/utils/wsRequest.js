@@ -108,40 +108,34 @@ let ws = {
           case 'ADD_FRIEND':
             // var requestContacts = []
             // requestContacts.push(requestContact)
-            console.log("requestContact:"+message.from)
+            console.log("requestContact:"+data.from)
             // store.commit('SET_CONTACT', requestContacts)
             Notification({
                 title: '好友添加请求',
-                message: message.from+"请求添加好友",
+                message: data.from+"请求添加好友",
                 type: 'success',
                 duration: 0
               });
+              store.dispatch("listFriendReq");
               return;
-            // store.dispatch("getContacts");
+            
           case 'MEDIA':
               // store.dispatch('onMessage', {message})
               return
           case 'SMS':
-            // var loadMessage = JSON.parse(message.message)
-            console.log("怪")
             store.commit('GET_NEW_MESSAGE', data)
-            // Notification({
-            //     title: '新消息',
-            //     message: data.content,
-            //     type: 'success'
-            //   });
               return
           case 'PUSH_OUT':
               // this.onPushOut()
               return
           case 'DEAL_ADD_FRIEND_REQ':
-            console.log("DEAL_ADD_FRIEND_REQ:"+data)
             Notification({
                 title: '好友通过添加',
-                message: friend.friendname+"通过您的好友添加",
+                message: data.from+"通过您的好友添加",
                 type: 'success',
                 duration: 0
               });
+              store.dispatch("getContacts");
             return
           case 'ACCEPTED_FRIEND_REQ':
             // var friend = JSON.parse(message.content)

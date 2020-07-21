@@ -65,17 +65,17 @@ export default {
             if (!this.value) {
                 return
             }
-            if (this.value === this.$store.getters.tokens.username) {
-                MessageBox.close()
-                this.$nextTick(() => {
-                    MessageBox.alert(
-                        '自己不能添加自己',
-                        '提示',
-                        {confirmButtonText: '确定'}
-                    )
-                })
-                return
-            }
+            // if (this.value === this.$store.getters.tokens.username) {
+            //     MessageBox.close()
+            //     this.$nextTick(() => {
+            //         MessageBox.alert(
+            //             '自己不能添加自己',
+            //             '提示',
+            //             {confirmButtonText: '确定'}
+            //         )
+            //     })
+            //     return
+            // }
             searchFriend(this.value).then(response => {
                 console.log(response)
                  this.friendResult = response
