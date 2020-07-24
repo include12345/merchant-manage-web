@@ -4,7 +4,7 @@
             <load-more-top slot="top" :topStatus="topStatus"></load-more-top>
             <ul class="session-list">
                 <div class="lost-msg" v-show="lostConnect">
-                    <p>正在尝试重新连接...</p>
+                    <p onclick="setLostConnect">点击重新连接</p>
                 </div>
                 <div class="no-message" v-show="showNoMsg">
                     <div>
@@ -62,6 +62,9 @@ export default {
             },
             handleTopChange(status) {
                 this.topStatus = status
+            },
+            setLostConnect() {
+                this.$store.dispatch('subscribeMsg')
             },
             loadUnread() {
                 // this.$store.dispatch('getUnReadMessages')

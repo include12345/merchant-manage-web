@@ -6,6 +6,9 @@
                     <mt-button icon="back">返回</mt-button>
                 </a>
             </mt-header>
+            <div class="lost-msg" v-show="lostConnect">
+                    <p onclick="setClick">点击重新连接</p>
+                </div>
             <div class="message-section">
                 <ul class="message-list" ref="list">
                     <message 
@@ -45,7 +48,7 @@
             }
         },
         computed: {
-            ...mapGetters(['currentSession']),
+            ...mapGetters(['currentSession','lostConnect']),
             // sortedMessages() {
             //     console.log()
             //     return this.currentSession.messages
@@ -136,6 +139,15 @@
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
+    .lost-msg {
+                background-color: #fdf6ec;
+                color: #e6a23c;
+                p {
+                    margin: 0;
+                    padding: 5px 0;
+                    text-align: center;
+                }
+    }
     .message-section {
         overflow-y: auto;
         flex: 1;

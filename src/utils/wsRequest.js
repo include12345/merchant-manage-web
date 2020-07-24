@@ -10,7 +10,6 @@ let ws = {
   webSocket: null,
   reconnecting: false,
   cleanId: -1,
-
   disconnect() {
       if (this.cleanId !== -1) {
           clearInterval(this.cleanId)
@@ -22,7 +21,9 @@ let ws = {
           this.webSocket.unsubscribe()
           this.webSocket.disconnect(() => {}, headers)
           this.webSocket = null
+          
       }
+      store.commit('SET_LOSTCONNECT', true)
   },
 
   subscribe(username) {
@@ -40,6 +41,7 @@ let ws = {
 
   connectCallback(username) {
       let vm = this
+      store.commit('SET_LOSTCONNECT', false)
       vm.webSocket.subscribe('/user/'+username+'/chat', function(response) {
           console.log("response:" +JSON.stringify(response.body))
           if(response.body != null) {
@@ -52,6 +54,7 @@ let ws = {
 
   errorCallback() {
       if (!store.getters.expiredTime || store.getters.expiredTime < Date.now()) {
+        store.commit('SET_LOSTCONNECT', true)
           return
       }
     //   store.commit('LOST_CONNECT', true)
@@ -79,7 +82,8 @@ let ws = {
   reconnect() {
       this.cleanId = setInterval(() => {
           if(this.reconnecting || this.cleanId === -1) {
-              return
+            store.commit('SET_LOSTCONNECT', true)
+            return
           }
           this.reconnecting = true
           store.dispatch('subscribeMsg').then(()=> {
@@ -88,7 +92,9 @@ let ws = {
               store.dispatch('getContacts')
               store.dispatch('getUnReadMessage')
               this.reconnecting = false
+              store.commit('SET_LOSTCONNECT', true)
           }).catch(() => {
+            store.commit('SET_LOSTCONNECT', true)
               this.reconnecting = false
           }, 1000 * 5)
       })

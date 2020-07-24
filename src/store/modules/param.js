@@ -17,10 +17,9 @@ const param = {
         contacts: [],
         requestContacts:[],
         nearbyPeoples: [],
-        connected: false,
         active: 'message',
         currentFrom: null,
-        lostConnect: false,
+        lostConnect: true,
         unSendMsg:[],
         isAlertTips:false,
         gender: localStorage.gender || null
@@ -32,6 +31,10 @@ const param = {
         },
         SET_ACTIVE: (state, active) => {
             state.active = active
+        },
+        SET_LOSTCONNECT: (state, lostConnect) => {
+            console.log("lostConnect:" + lostConnect)
+            state.lostConnect = lostConnect
         },
         SWITCH_SESSION: (state, from) => {
             console.log("state:" + JSON.stringify(state.sessions) + "from:" + from)
@@ -233,7 +236,7 @@ const param = {
               })
             })
         },
-        subscribeMsg({commit}) {
+        subscribeMsg() {
             ws.subscribe(getToken().username) 
         }
     }
