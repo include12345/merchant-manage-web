@@ -337,6 +337,24 @@ export function listUnReadMessages() {
   })
 }
 
+export function listMessages(from, startTime, endTime) {
+  return request({
+    url: '/record/listChatRecordPaging',
+    method: 'get',
+    headers:{
+      "token": getToken().token
+    },
+    params: {
+      "from": from,
+      "to": getToken().username,
+      "ctimeStart": startTime,
+      "ctimeEnd": endTime,
+      "pageNo": 0,
+      "pageSize": 1000
+    }
+  })
+}
+
 
 
 

@@ -24,6 +24,7 @@ const getters = {
     gender: state => state.gender === null ? null : parseInt(state.gender),
     currentSession: state => state.param.currentSession,
     currentMessages: state => state.param.currentMessages,
+    endTime: state => state.param.endTime
 }
 
 export default getters

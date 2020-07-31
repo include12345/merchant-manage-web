@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import ws from  '@/utils/wsRequest'
-import { listFriends, listFriendReq, listUnReadMessages } from '@/api/api'
+import { listFriends, listFriendReq, listUnReadMessages, listMessages} from '@/api/api'
 import {getToken} from '@/utils/auth'
 import { Notification } from 'element-ui';
 
@@ -22,7 +22,8 @@ const param = {
         lostConnect: true,
         unSendMsg:[],
         isAlertTips:false,
-        gender: localStorage.gender || null
+        gender: localStorage.gender || null,
+        endTime: Date.now()
     },
 
     mutations: {
@@ -37,6 +38,7 @@ const param = {
             state.lostConnect = lostConnect
         },
         SWITCH_SESSION: (state, from) => {
+            state.endTime = Date.now()
             console.log("state:" + JSON.stringify(state.sessions) + "from:" + from)
             state.currentSession = state.sessions[from]    
             console.log("state.currentSession:" + JSON.stringify(state.currentSession))
@@ -50,6 +52,9 @@ const param = {
                         ws.remarkHasRead(from)
                     }
                     state.currentSession.unreadMsgCount = 0
+                }
+                if(state.currentSession.messages!= null && state.currentSession.messages.length > 0) {
+                    state.endTime = state.currentSession.messages[0].ctime - 1
                 }
             } else {
                 state.currentSession = {
@@ -74,18 +79,12 @@ const param = {
                 }
             }
             state.currentSession.lastMessage = message.content
-            // if(state.sessions[message.to]) {
-            //     state.sessions[message.to].messages.push(message)
-
-            // } else {
-            //     Vue.set(state.sessions, message.to, state.currentSession)
-            // }
-
             if(!state.sessions[message.to]) {
                 Vue.set(state.sessions, message.to, state.currentSession)
             }
             
         },
+
         GET_NEW_MESSAGE: (state, message) => {
             
            if(state.sessions[message.from]) {
@@ -128,14 +127,57 @@ const param = {
                 Vue.set(state.sessions, message.from, session)
                 Notification({
                     title: '新消息',
-                    message: data.content,
+                    message: message.content,
                     type: 'success'
                 });
             }
             
             console.log("message:"+JSON.stringify(message))
         },
-        
+        GET_MESSAGES: (state, responseMessage) => {
+            var from = responseMessage.from
+            var messages = responseMessage.messages
+            state.currentSession = state.sessions[from]
+           
+           if(state.currentSession) {
+                var allMessages = messages.concat(state.currentSession.messages)
+                console.log("messages:"+JSON.stringify(allMessages))
+                state.currentSession.messages = allMessages
+            } else {
+                var contact = null
+                for (var i = 0; i < state.contacts.length; i++) {
+                    if(state.contacts[i].friendname == from) {
+                        contact = state.contacts[i]
+                        break;
+                    }
+                }
+                var imageUrl = null
+                var remark = null
+                if(contact) {
+                    imageUrl = contact.imageUrl
+                    remark = contact.remark
+                }
+                var lastMessage = null
+                if(messages != null && messages.length > 0) {
+                    lastMessage = messages[messages.length -1].content
+                }
+                var session = {
+                    from: from,
+                    imageUrl: imageUrl,
+                    remark: remark,
+                    messages: messages,
+                    lastMessage: lastMessage,
+                    unreadMsgCount: 0
+                }
+                state.currentSession = session
+            }
+            Vue.set(state.sessions, from, state.currentSession) 
+            if (state.currentSession != null 
+                && state.currentSession.messages != null 
+                && state.currentSession.messages.length > 0) {
+                state.endTime = state.currentSession.messages[0].ctime - 1
+            }
+        },
         GET_UNREAD_MESSAGES: (state, unReadMessagesMap) => {
             state.sessions = {}
             state.unreadMsgCount = 0
@@ -205,6 +247,18 @@ const param = {
         getUnReadMessages({commit}){
             listUnReadMessages().then(response => {
                 commit('GET_UNREAD_MESSAGES', response)
+            })
+        },
+        listMessages({commit}, param){
+            console.log("startTime:"+ param.endTime - 1000 * 60 * 60 * 24 * 30 + "time:" + param.endTime + "from:" + param.from)
+            listMessages(param.from, param.endTime - 1000 * 60 * 60 * 24 * 30, param.endTime).then(response => {
+                console.log("response:"+JSON.stringify(response))
+
+                var responseMessage = {
+                    from:param.from,
+                    messages:response.content
+                }
+                commit('GET_MESSAGES', responseMessage)
             })
         },
         getContacts({commit}) {

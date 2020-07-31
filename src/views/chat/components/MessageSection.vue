@@ -7,8 +7,11 @@
                 </a>
             </mt-header>
             <div class="lost-msg" v-show="lostConnect">
-                    <p onclick="setClick">点击重新连接</p>
-                </div>
+                <p @click="setLostConnect">点击重新连接</p>
+            </div>
+            <div class="lost-msg">
+                <p @click="listChatRecords">查看历史记录</p>
+            </div>
             <div class="message-section">
                 <ul class="message-list" ref="list">
                     <message 
@@ -48,7 +51,7 @@
             }
         },
         computed: {
-            ...mapGetters(['currentSession','lostConnect']),
+            ...mapGetters(['currentSession','lostConnect', 'endTime']),
             // sortedMessages() {
             //     console.log()
             //     return this.currentSession.messages
@@ -114,6 +117,16 @@
                     // })
                 }
             },
+             setLostConnect() {
+                this.$store.dispatch('subscribeMsg')
+            },
+            listChatRecords() {
+                var param = {
+                    endTime: this.endTime,
+                    from: this.currentSession.from
+                }
+                this.$store.dispatch('listMessages', param)
+            },
             back() {
                 this.$store.dispatch('clearSession').then(() => {
                     window.history.length > 1
@@ -139,15 +152,19 @@
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
+    
     .lost-msg {
-                background-color: #fdf6ec;
-                color: #e6a23c;
-                p {
-                    margin: 0;
-                    padding: 5px 0;
-                    text-align: center;
-                }
+        width: 20%;
+        margin:0 auto;
+        background-color: #fdf6ec;
+        color: #e6a23c;
+        p {
+            margin: 0;
+            padding: 5px 0;
+            text-align: center;
+        }
     }
+    
     .message-section {
         overflow-y: auto;
         flex: 1;
