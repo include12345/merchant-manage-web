@@ -9,16 +9,10 @@
                 </mt-badge>
             </mt-cell>
             <template v-for="contact in contacts">
-                 <mt-cell :title="contact.friendname"
+                 <mt-cell :title="contact.remark == null ? contact.friendname : contact.remark"
                         @click.native="toFriendCard(contact.friendname)">
+                        <img slot="icon" :src="contact.imageUrl" width="24" height="24">
                  </mt-cell>
-                <!-- <mt-index-section class="contact" :index="contact.tag">
-                    <template v-for="friendInfo in contact.friendsInfo">
-                        <mt-cell :title="friendInfo.friendname"
-                        @click.native="toFriendCard(friendInfo.friendname)">
-                        </mt-cell>
-                    </template>
-                </mt-index-section> -->
             </template>
         </mt-index-list>
     </div>
@@ -41,7 +35,9 @@ export default {
             this.$router.push({path: '/chat/newFriend'})
         },
         toFriendCard(friendName) {
-            this.$router.push({path: '/chat/friendCard', query: {friendName}})
+            this.$store.dispatch("getContact", friendName);
+            this.$router.push({path: '/chat/friendCard'})
+            
         }
     },
     beforeCreate: function() {
@@ -67,14 +63,17 @@ export default {
         }
         .contact {
             .mint-cell-wrapper {
-                position: absolute;
-                left: 10px;
-                top: 6px;
-            }
-            .mint-cell-title {
-                position: absolute;
-                left: 60px;
-                top: 13px;
+                position: relative;
+                .mint-cell-value {
+                    position: absolute;
+                    left: 10px;
+                    top: 6px;
+                }
+                .mint-cell-title {
+                    position: absolute;
+                    left: 60px;
+                    top: 13px;
+                }
             }
         }
     }

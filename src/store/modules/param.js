@@ -15,6 +15,7 @@ const param = {
         unreadReqCount: 0,
         unreadMsgCount: 0,
         contacts: [],
+        contactMsg:{},
         requestContacts:[],
         nearbyPeoples: [],
         active: 'message',
@@ -211,23 +212,26 @@ const param = {
         GET_CONTACTS: (state, contacts) => {
             state.contacts = contacts
         },
+        GET_CONTACT: (state, friendName) => {
+            state.contacts.forEach(contact => {
+                if(friendName == contact.friendname) {
+                    console.log("param1:getContact:" + friendName)
+                    state.contactMsg = contact;
+                    return;
+                }
+            })
+        },
         GET_REQUEST_CONTACTS: (state, requestContacts) =>{
             state.requestContacts = requestContacts;
             state.unreadReqCount = requestContacts.length
         },
         SET_REMARK: (state, {friendName, remark}) => {
-            var tag = friendName.substring(0, 1)
             state.contacts.forEach(contact => {
-                if(contact.tag === tag) {
-                    contact.friendsInfo.forEach(friendInfo => {
-                        if(friendInfo.friendname === friendName) {
-                            friendInfo.remark === remark
-                        }
-                    })
+                if(contact.friendname == friendName) {
+                    contact.remark = remark
+                    state.contactMsg = contact
                 }
             })
-            commit('GET_CONTACTS', state.contacts)
-            
         }
     },
 
@@ -267,7 +271,10 @@ const param = {
                     commit('GET_CONTACTS', response)
                 })
         },
-
+        getContact({commit}, friendName) {
+            console.log("param:getContact:" + friendName)
+            commit('GET_CONTACT', friendName)
+        },
         listFriendReq({commit}) {
             listFriendReq().then(response => {
                     commit('GET_REQUEST_CONTACTS', response)
@@ -279,16 +286,7 @@ const param = {
             
         },
         setRemark({commit}, payload){
-            return new Promise((resolve, reject) => {
-              api.setRemark(payload, (res) => {
-                if (res) {
-                  commit('SET_REMARK', payload)
-                  resolve()
-                } else {
-                  reject()
-                }
-              })
-            })
+            commit('SET_REMARK', payload)
         },
         subscribeMsg() {
             ws.subscribe(getToken().username) 

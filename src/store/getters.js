@@ -12,6 +12,7 @@ const getters = {
     unreadReqCount: state => state.param.unreadReqCount,
     unreadMsgCount: state => state.param.unreadMsgCount,
     contacts: state => state.param.contacts,
+    contactMsg: state => state.param.contactMsg,
     friends: state => state.param.friends,
     requestContacts: state => state.param.requestContacts,
     connected: state => state.param.connected,

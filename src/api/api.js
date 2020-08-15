@@ -408,4 +408,19 @@ export function deleteFriend(friendName) {
     }
   })
 }
+
+
+export function updateRemark(friendName, remark) {
+  return request({
+    url: '/friend/updateFriend',
+    method: 'post',
+    headers:{
+      "token": getToken().token
+    },
+    data: {
+      "friendName": friendName,
+      "remark": remark
+    }
+  })
+}
         
