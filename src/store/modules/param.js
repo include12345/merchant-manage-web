@@ -58,8 +58,23 @@ const param = {
                     state.endTime = state.currentSession.messages[0].ctime - 1
                 }
             } else {
+                var contact = null
+                for (var i = 0; i < state.contacts.length; i++) {
+                    if(state.contacts[i].friendname == from) {
+                        contact = state.contacts[i]
+                        break;
+                    }
+                }
+                var imageUrl = null
+                var remark = null
+                if(contact) {
+                    imageUrl = contact.imageUrl
+                    remark = contact.remark
+                }
                 state.currentSession = {
-                    from: from
+                    from: from,
+                    imageUrl: imageUrl,
+                    remark: remark
                 } 
             }
            
@@ -87,8 +102,23 @@ const param = {
         },
 
         GET_NEW_MESSAGE: (state, message) => {
-            
-           if(state.sessions[message.from]) {
+           if(state.sessions[message.from] != null) {
+               if(state.currentSession.imageUrl == null) {
+                var contact = null
+                for (var i = 0; i < state.contacts.length; i++) {
+                    if(state.contacts[i].friendname == message.from) {
+                        contact = state.contacts[i]
+                        break;
+                    }
+                }
+                var imageUrl = null
+                var remark = null
+                if(contact) {
+                    imageUrl = contact.imageUrl
+                    remark = contact.remark
+                }
+                state.currentSession.imageUrl = imageUrl
+               }
                 if(state.currentSession.from == message.from) {
                     state.currentSession.messages.push(message)
                     state.currentSession.lastMessage = message.content

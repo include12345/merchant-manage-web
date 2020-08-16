@@ -31,7 +31,8 @@ const user = {
                 // const data = response.data
                     this.tokens = {
                         token: response.token,
-                        username: username
+                        username: username,
+                        imageUrl: response.imageUrl
                     }
                     
                     setToken(JSON.stringify(this.tokens))

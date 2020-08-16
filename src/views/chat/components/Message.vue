@@ -14,7 +14,7 @@
             </span>
             <font>{{message.content}}</font>
         </div>
-        <img :class="'user-icon' +(isMe ? ' icon-left' : ' icon-right')" :src="imgSrc">
+        <img :class="'user-icon' +(isMe ? ' icon-left' : ' icon-right')" width="24" height="24" :src="imgSrc">
     </li>
 </template>
 <script>
@@ -29,9 +29,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            session: 'currentSession'
-        }),
+        ...mapGetters(['currentSession','tokens']),
         isMe() {
             return this.message.to != this.from
         },
@@ -40,7 +38,7 @@ export default {
         },
         istimeout() {
             console.log("this.message:" + this.message)
-            return this.message.isMe && this.message.timeout
+            // return this.message.isMe && this.message.timeout
         },
         profilePhoto() {
             let info = this.friendsInfo[this.session.from]
@@ -50,8 +48,12 @@ export default {
             return ''
         },
         imgSrc() {
-            let version = this.message.isMe ? ('?' + this.profilePhotoVersion) : ''
-            return `/apis/user/getProfilePhoto/${this.message.from + version}`
+          console.log("currentSession:" + JSON.stringify(this.currentSession))
+          console.log("imageUrl:" + this.tokens.imageUrl + ","+this.currentSession.imageUrl)
+            let imageUrl = this.message.to == this.from ? this.tokens.imageUrl : this.currentSession.imageUrl
+           console.log("imageUrl:" + imageUrl)
+
+            return imageUrl
         }
     },
     props: {
